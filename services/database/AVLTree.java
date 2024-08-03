@@ -7,9 +7,13 @@ import exceptions.treeExceptions.NonExistentEntryException;
 public class AVLTree {
 
     private Node root;
-    private DefaultToStringBehavior defaultToStringBehavior = DefaultToStringBehavior.POST_ORDER;
+    private DefaultToStringBehavior defaultToStringBehavior = DefaultToStringBehavior.IN_ORDER;
     public  enum DefaultToStringBehavior {
         IN_ORDER, PRE_ORDER, POST_ORDER
+    }
+
+    public int treeHeight() {
+        return height(root);
     }
 
     private int height(Node node) {
@@ -31,6 +35,20 @@ public class AVLTree {
             root = root.left;
         }
         return root;
+    }
+
+    public int getHighestId() {
+        return getHighestId(root);
+    }
+
+    private int getHighestId(Node root) {
+        if (root == null) {
+            return -1;
+        }
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root.getOSId();
     }
 
     private int balanceFactor(Node root) {
@@ -84,6 +102,30 @@ public class AVLTree {
         return root;
     }
 
+    public OS searchOS(int id) {
+        Node foundNode = search(root, id);
+        return foundNode != null ? foundNode.getOS() : null;
+    }
+
+    public boolean search(int id) {
+        Node foundNode = search(root, id);
+        return foundNode != null;
+    }
+
+    private Node search(Node root, int id) {
+        if (root == null) {
+            return null;
+        }
+
+        if (id < root.getOSId()) {
+            return search(root.left, id);
+        } else if (id > root.getOSId()) {
+            return search(root.right, id);
+        } else {
+            return root;
+        }
+    }
+
     public void insert(OS serviceOrder) {
         try {
             root = insert(root, serviceOrder);
@@ -109,6 +151,14 @@ public class AVLTree {
         root.height = 1 + bigger(height(root.left), height(root.right));
 
         return balanceTree(root);
+    }
+
+    public void remove(int id) throws NonExistentEntryException {
+        Node foundNode = search(root, id);
+        if (foundNode == null) {
+            throw new NonExistentEntryException("OS with ID " + id + " does not exist in the tree.");
+        }
+        remove(foundNode.getOS());
     }
 
     public void remove(OS serviceOrder) {
@@ -201,6 +251,10 @@ public class AVLTree {
                 this.defaultToStringBehavior = DefaultToStringBehavior.POST_ORDER;
                 break;
         }
+    }
+
+    public boolean isEmpty() {
+        return root == null;
     }
 
     @Override

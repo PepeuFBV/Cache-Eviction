@@ -8,7 +8,8 @@ import java.util.Queue;
 public class Cache {
 
     // stores the last 20 service orders
-    private Queue<OS> cache;
+    private Queue<OS> cache = new java.util.LinkedList<>();
+    final int maxSize = 20;
 
     private void setCache(Queue<OS> cache) {
         this.cache = cache;
@@ -31,6 +32,9 @@ public class Cache {
 
     // returns null if the service order is not in the cache/cache is empty
     public OS get(int id) {
+        if (cache.isEmpty()) {
+            return null;
+        }
         for (OS os : cache) {
             if (os.getId() == id) {
                 return os;
@@ -39,11 +43,37 @@ public class Cache {
         return null;
     }
 
+    public boolean isEmpty() {
+        return cache.isEmpty();
+    }
+
+    public boolean hasSpace() {
+        return getSize() < maxSize;
+    }
+
+    public void remove(int id) {
+        if (cache.isEmpty()) {
+            return;
+        }
+        for (OS os : cache) {
+            if (os.getId() == id) {
+                cache.remove(os);
+                return;
+            }
+        }
+    }
+
+    public int getSize() {
+        return cache.size();
+    }
+
     @Override
     public String toString() {
-        return "Cache{" +
-                "cache=" + cache +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        for (OS os : cache) {
+            sb.append(os.toString()).append("\n");
+        }
+        return sb.toString();
     }
 
 }

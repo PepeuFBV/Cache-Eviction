@@ -4,27 +4,24 @@ import java.time.LocalDateTime;
 
 public class OS {
 
-    private int Id;
+    public static int nextId = 0;
+    private int id;
     private String name;
     private String description;
     private LocalDateTime solicitationTime;
 
-    public OS(int Id, String name, String description, LocalDateTime solicitationTime) {
-        this.setId(Id);
+    public OS(String name, String description, LocalDateTime solicitationTime) {
+        this.id = nextId++;
         this.setName(name);
         this.setDescription(description);
         this.setSolicitationTime(solicitationTime);
     }
 
-    private void setId(int Id) {
-        this.Id = Id;
-    }
-
     public int getId() {
-        return Id;
+        return id;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -32,7 +29,7 @@ public class OS {
         return name;
     }
 
-    private void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -50,12 +47,12 @@ public class OS {
 
     @Override
     public String toString() {
-        return "OS{" +
-                "Id=" + getId() +
-                ", name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", solicitationTime=" + getSolicitationTime() +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("ID: ").append(this.id).append(" - ");
+        sb.append("Name: ").append(this.name).append(" - ");
+        sb.append("Description: ").append(this.description).append(" - ");
+        sb.append("Solicitation Time: ").append(this.solicitationTime);
+        return sb.toString();
     }
 
 }

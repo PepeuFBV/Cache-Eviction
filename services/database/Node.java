@@ -12,6 +12,10 @@ public class Node {
         setOS(serviceOrder);
     }
 
+    public Node(int id, String name, String description, String solicitationTime) {
+        this(new OS(name, description, java.time.LocalDateTime.parse(solicitationTime)));
+    }
+
     public void setOS(OS serviceOrder) {
         this.serviceOrder = serviceOrder;
     }
