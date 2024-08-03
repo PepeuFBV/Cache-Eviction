@@ -2,22 +2,19 @@ package services;
 
 import entities.OS;
 import java.util.List;
+import java.util.Queue;
 
 // uses FIFO logic when the cache is full (20 elements)
 public class Cache {
 
     // stores the last 20 service orders
-    private List<OS> cache;
+    private Queue<OS> cache;
 
-    public Cache(List<OS> cache) {
-        this.setCache(cache);
-    }
-
-    private void setCache(List<OS> cache) {
+    private void setCache(Queue<OS> cache) {
         this.cache = cache;
     }
 
-    public List<OS> getCache() {
+    public Queue<OS> getCache() {
         return cache;
     }
 
@@ -27,9 +24,9 @@ public class Cache {
 
     public void add(OS os) {
         if (cache.size() == 20) {
-            cache.remove(0);
+            cache.poll(); // removes the first element
         }
-        cache.add(os);
+        cache.add(os); // adds the new element to the end
     }
 
     // returns null if the service order is not in the cache/cache is empty
