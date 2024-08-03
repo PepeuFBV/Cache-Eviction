@@ -12,7 +12,7 @@ public class Node {
         setOS(serviceOrder);
     }
 
-    private void setOS(OS serviceOrder) {
+    public void setOS(OS serviceOrder) {
         this.serviceOrder = serviceOrder;
     }
 

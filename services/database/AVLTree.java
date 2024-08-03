@@ -7,6 +7,10 @@ import exceptions.treeExceptions.NonExistentEntryException;
 public class AVLTree {
 
     private Node root;
+    private DefaultToStringBehavior defaultToStringBehavior = DefaultToStringBehavior.POST_ORDER;
+    public  enum DefaultToStringBehavior {
+        IN_ORDER, PRE_ORDER, POST_ORDER
+    }
 
     private int height(Node node) {
         if (node == null) {
@@ -19,7 +23,18 @@ public class AVLTree {
         return a > b ? a : b;
     }
 
+    private Node minValueNode(Node root) {
+        if (root == null) {
+            return null;
+        }
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+
     private int balanceFactor(Node root) {
+        if (root == null) return 0;
         return height(root.left) - height(root.right);
     }
 
@@ -49,18 +64,16 @@ public class AVLTree {
 
     private Node balanceTree(Node root) {
         int balanceFactor = balanceFactor(root);
-        int balanceFactorLeft = balanceFactor(root.left);
-        int balanceFactorRight = balanceFactor(root.right);
 
         if (balanceFactor > 1) { // right rotation needed
-            if (balanceFactorLeft >= 0) { // simple right rotation
+            if (balanceFactor(root.left) >= 0) { // simple right rotation
                 return rightRotation(root);
             } else { // double right rotation
                 root.left = leftRotation(root.left);
                 return rightRotation(root);
             }
         } else if (balanceFactor < -1) {
-            if (balanceFactorRight <= 0) {
+            if (balanceFactor(root.right) <= 0) {
                 return leftRotation(root);
             } else {
                 root.right = rightRotation(root.right);
@@ -107,8 +120,96 @@ public class AVLTree {
     }
 
     private Node remove(Node root, OS serviceOrder) throws NonExistentEntryException {
-        // TODO: implement
-        return null;
+        if (root == null) {
+            throw new NonExistentEntryException("OS with ID " + serviceOrder.getId() + " does not exist in the tree.");
+        }
+
+        if (serviceOrder.getId() < root.getOSId()) {
+            root.left = remove(root.left, serviceOrder);
+        } else if (serviceOrder.getId() > root.getOSId()) {
+            root.right = remove(root.right, serviceOrder);
+        } else { // found node to be removed
+            if (root.left == null && root.right == null) { // current root is leaf
+                return null;
+            } else if (root.left == null) {
+                root = root.right;
+            } else if (root.right == null) {
+                root = root.left;
+            } else { // has nodes to both its right and left
+                Node minValueNode = minValueNode(root.right);
+                root.setOS(minValueNode.getOS()); // moves the new service order to the root
+                root.right = remove(root.right, minValueNode.getOS()); // removes the old copy of the new root
+            }
+        }
+
+        root.height = 1 + bigger(height(root.left), height(root.right));
+
+        return balanceTree(root);
+    }
+
+    public String inOrder() {
+        return inOrder(this.root);
+    }
+
+    private String inOrder(Node root) {
+        StringBuilder sb = new StringBuilder();
+        if (root != null) {
+            sb.append(inOrder(root.left));
+            sb.append(root.getOS().toString()).append("\n");
+            sb.append(inOrder(root.right));
+        }
+        return sb.toString();
+    }
+
+    public String preOrder() {
+        return preOrder(this.root);
+    }
+
+    private String preOrder(Node root) {
+        StringBuilder sb = new StringBuilder();
+        if (root != null) {
+            sb.append(root.getOS().toString()).append("\n");
+            sb.append(preOrder(root.left));
+            sb.append(preOrder(root.right));
+        }
+        return sb.toString();
+    }
+
+    public String postOrder() {
+        return postOrder(this.root);
+    }
+
+    private String postOrder(Node root) {
+        StringBuilder sb = new StringBuilder();
+        if (root != null) {
+            sb.append(postOrder(root.left));
+            sb.append(postOrder(root.right));
+            sb.append(root.getOS().toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void changeDefaultToStringBehavior(DefaultToStringBehavior behavior) {
+        switch (behavior) {
+            case IN_ORDER:
+                this.defaultToStringBehavior = DefaultToStringBehavior.IN_ORDER;
+                break;
+            case PRE_ORDER:
+                this.defaultToStringBehavior = DefaultToStringBehavior.PRE_ORDER;
+                break;
+            case POST_ORDER:
+                this.defaultToStringBehavior = DefaultToStringBehavior.POST_ORDER;
+                break;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return switch (this.defaultToStringBehavior) {
+            case PRE_ORDER -> preOrder();
+            case POST_ORDER -> postOrder();
+            default -> inOrder();
+        };
     }
 
 }
