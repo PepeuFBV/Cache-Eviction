@@ -1,6 +1,6 @@
 package entities;
 
-import exceptions.AuthenticationException;
+import exceptions.authentication.AuthenticationException;
 import exceptions.authentication.InvalidPasswordException;
 
 public class User {
