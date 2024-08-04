@@ -48,6 +48,7 @@ public class Service {
                 logger.log("[" + getCurrentTime() + "] Service Order added to tree");
             }
         }
+        logData(true);
     }
 
     private String getCurrentTime() {
@@ -67,6 +68,7 @@ public class Service {
         if (avlTree.isEmpty()) {
             return "Database is empty\n";
         }
+        logData(true);
         return avlTree.toString();
     }
 
@@ -75,6 +77,7 @@ public class Service {
         if (cache.isEmpty()) {
             return "Cache is empty\n";
         }
+        logData(true);
         return cache.toString();
     }
 
@@ -87,12 +90,14 @@ public class Service {
 
         if (cache.get(id) != null) { // OS exists in the cache
             logger.log("[" + getCurrentTime() + "] Service Order found in cache");
+            logData(true);
             return cache.get(id); // returns the OS
         }
 
         if (avlTree.search(id)) { // OS exists in the tree
             logger.log("[" + getCurrentTime() + "] Service Order found in tree");
             cache.add(avlTree.searchOS(id)); // adds to cache
+            logData(true);
             return avlTree.searchOS(id); // returns the OS
         }
         logger.log("[" + getCurrentTime() + "] Service Order not found in tree");
@@ -118,12 +123,13 @@ public class Service {
                     logger.log("[" + getCurrentTime() + "] " + e.getMessage());
                     throw new NonExistentEntryException(e.getMessage());
                 }
+                logData(true);
                 return;
-            } else {
+            } else { // OS is not in the cache
                 if (avlTree.search(id)) { // OS exists in the tree
                     logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " found in database");
                     OS os = avlTree.searchOS(id);
-                    cache.remove(id);
+                    cache.remove(id); // removes the OS from the cache, due to the search method's default behavior
                     logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " removed from cache");
                     try {
                         avlTree.remove(id);
@@ -132,6 +138,7 @@ public class Service {
                         logger.log("[" + getCurrentTime() + "] " + e.getMessage());
                         throw new NonExistentEntryException(e.getMessage());
                     }
+                    logData(true);
                     return;
                 }
             }
@@ -156,6 +163,15 @@ public class Service {
 
         cache.add(avlTree.searchOS(id));
         logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " added to cache");
+
+        logData(true);
+    }
+
+    private void logData(boolean logCache) {
+        logger.log("[" + getCurrentTime() + "] - T - Tree height: " + avlTree.getHeight());
+        if (logCache) {
+            logger.log("[" + getCurrentTime() + "] - C - Cache content: " + cache.toString());
+        }
     }
 
     private boolean isInCache(OS os) {

@@ -1,27 +1,14 @@
 package services;
 
 import entities.OS;
-import java.util.List;
 import java.util.Queue;
 
 // uses FIFO logic when the cache is full (20 elements)
 public class Cache {
 
     // stores the last 20 service orders
-    private Queue<OS> cache = new java.util.LinkedList<>();
+    private final Queue<OS> cache = new java.util.LinkedList<>();
     final int maxSize = 20;
-
-    private void setCache(Queue<OS> cache) {
-        this.cache = cache;
-    }
-
-    public Queue<OS> getCache() {
-        return cache;
-    }
-
-    public int getCacheSize() {
-        return cache.size();
-    }
 
     public void add(OS os) {
         if (cache.size() == 20) {
@@ -70,9 +57,11 @@ public class Cache {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
         for (OS os : cache) {
-            sb.append(os.toString()).append("\n");
+            sb.append(os.getId()).append(", ");
         }
+        sb.append(" ]");
         return sb.toString();
     }
 

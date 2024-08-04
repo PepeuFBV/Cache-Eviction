@@ -1,6 +1,5 @@
 package services;
 
-import services.database.AVLTree;
 import services.database.Node;
 
 import java.io.File;
@@ -11,7 +10,6 @@ import java.util.Scanner;
 public class Logger {
 
     private static final String defaultLogPath = "log/log.txt";
-    //private static final String defaultTreeLogPath = "log/tree.txt";
     private static Logger instance;
 
     private Logger() {
@@ -60,7 +58,7 @@ public class Logger {
         try (FileWriter fileWriter = new FileWriter(defaultLogPath, true)) {
             fileWriter.write("\n" + message);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Failed to write to log file");
         }
     }
 

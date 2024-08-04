@@ -12,7 +12,7 @@ public class AVLTree {
         IN_ORDER, PRE_ORDER, POST_ORDER
     }
 
-    public int treeHeight() {
+    public int getHeight() {
         return height(root);
     }
 
