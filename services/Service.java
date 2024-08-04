@@ -15,7 +15,7 @@ public class Service {
 
     public Service() {
         this.logger = Logger.getInstance();
-        logger.log("\n\nStarting services at " + java.time.LocalDateTime.now());
+        logger.log("\n\nStarting services at " + showDateAndTime());
         this.cache = new Cache();
         logger.log("[" + getCurrentTime() + "] Cache created");
         this.avlTree = new AVLTree();
@@ -27,7 +27,7 @@ public class Service {
     }
 
     public void stopServices() {
-        logger.log("Stopping services at " + java.time.LocalDateTime.now());
+        logger.log("Stopping services at " + showDateAndTime());
     }
 
     public void addNewServiceOrder(OS os) throws DuplicateEntryException {
@@ -180,6 +180,10 @@ public class Service {
 
     private boolean isInTree(OS os) {
         return avlTree.search(os.getId());
+    }
+
+    private String showDateAndTime() {
+        return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
     }
 
 }
