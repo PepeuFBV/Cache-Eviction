@@ -257,6 +257,17 @@ public class AVLTree {
         return root == null;
     }
 
+    public int getSize() {
+        return getSize(root);
+    }
+
+    private int getSize(Node root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + getSize(root.left) + getSize(root.right);
+    }
+
     @Override
     public String toString() {
         return switch (this.defaultToStringBehavior) {

@@ -69,7 +69,7 @@ public class Service {
             return "Database is empty\n";
         }
         logData(true);
-        return avlTree.toString();
+        return avlTree + "There are a total of " + avlTree.getSize() + " Service Orders in the database\n";
     }
 
     public String seeCache() {
