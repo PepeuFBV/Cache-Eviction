@@ -3,6 +3,7 @@ package services.database;
 import entities.OS;
 import exceptions.treeExceptions.DuplicateEntryException;
 import exceptions.treeExceptions.NonExistentEntryException;
+import services.Logger;
 
 public class AVLTree {
 
@@ -11,6 +12,7 @@ public class AVLTree {
     public  enum DefaultToStringBehavior {
         IN_ORDER, PRE_ORDER, POST_ORDER
     }
+    private final Logger logger = Logger.getInstance(); // only to log tree rotations
 
     public int getHeight() {
         return height(root);
@@ -64,6 +66,8 @@ public class AVLTree {
         root.height = 1 + bigger(height(root.left), height(root.right));
         left.height = 1 + bigger(height(left.left), height(left.right));
 
+        logger.log("[ " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + " ] " +  "Left rotation on node ID " + root.getOSId());
+
         // left becomes the new root
         return left;
     }
@@ -75,6 +79,8 @@ public class AVLTree {
 
         root.height = 1 + bigger(height(root.left), height(root.right));
         right.height = 1 + bigger(height(right.left), height(right.right));
+
+        logger.log("[ " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + " ] " +  "Right rotation on node ID " + root.getOSId());
 
         // right becomes the new root
         return right;
