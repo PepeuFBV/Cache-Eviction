@@ -66,8 +66,6 @@ public class AVLTree {
         root.height = 1 + bigger(height(root.left), height(root.right));
         left.height = 1 + bigger(height(left.left), height(left.right));
 
-        logger.log("[ " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + " ] " +  "Left rotation on node ID " + root.getOSId());
-
         // left becomes the new root
         return left;
     }
@@ -80,8 +78,6 @@ public class AVLTree {
         root.height = 1 + bigger(height(root.left), height(root.right));
         right.height = 1 + bigger(height(right.left), height(right.right));
 
-        logger.log("[ " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + " ] " +  "Right rotation on node ID " + root.getOSId());
-
         // right becomes the new root
         return right;
     }
@@ -91,15 +87,19 @@ public class AVLTree {
 
         if (balanceFactor > 1) { // right rotation needed
             if (balanceFactor(root.left) >= 0) { // simple right rotation
+                logger.log("[" + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + "] " +  "Simple right rotation on node ID " + root.getOSId());
                 return rightRotation(root);
             } else { // double right rotation
+                logger.log("[" + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + "] " +  "Double right rotation on node ID " + root.getOSId());
                 root.left = leftRotation(root.left);
                 return rightRotation(root);
             }
         } else if (balanceFactor < -1) {
-            if (balanceFactor(root.right) <= 0) {
+            if (balanceFactor(root.right) <= 0) { // simple left rotation
+                logger.log("[" + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + "] " +  "Simple left rotation on node ID " + root.getOSId());
                 return leftRotation(root);
-            } else {
+            } else { // double left rotation
+                logger.log("[" + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + "] " +  "Double left rotation on node ID " + root.getOSId());
                 root.right = rightRotation(root.right);
                 return leftRotation(root);
             }
