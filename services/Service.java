@@ -40,10 +40,8 @@ public class Service {
                 throw new DuplicateEntryException("Service Order already exists");
             } else {
                 logger.log("[" + getCurrentTime() + "] Creating new Service Order");
-                if (cache.hasSpace()) { // adds to cache if there is extra space
-                    cache.add(os);
-                    logger.log("[" + getCurrentTime() + "] Service Order added to cache");
-                }
+                cache.add(os);
+                logger.log("[" + getCurrentTime() + "] Service Order added to cache");
                 avlTree.insert(os);
                 logger.log("[" + getCurrentTime() + "] Service Order added to tree");
             }
