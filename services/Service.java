@@ -88,6 +88,8 @@ public class Service {
 
         if (cache.get(id) != null) { // OS exists in the cache
             logger.log("[" + getCurrentTime() + "] Service Order found in cache");
+            cache.remove(id); // removes the OS from the cache
+            cache.add(avlTree.searchOS(id)); // adds to the end of the cache
             logData(true);
             return cache.get(id); // returns the OS
         }
@@ -145,7 +147,7 @@ public class Service {
         throw new NonExistentEntryException("Service Order ID " + id + " not found in database");
     }
 
-    public void alterServiceOrder(int id, OS newServiceOrderData) { // assumes the tree has the Service Order
+    public void alterServiceOrder(int id, OS newServiceOrderData) {
         logger.log("[" + getCurrentTime() + "] Altering Service Order with ID " + id);
 
         if (cache.get(id) != null) { // OS exists in the cache
