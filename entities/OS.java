@@ -47,12 +47,10 @@ public class OS {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ID: ").append(this.id).append(" - ");
-        sb.append("Name: ").append(this.name).append(" - ");
-        sb.append("Description: ").append(this.description).append(" - ");
-        sb.append("Solicitation Time: ").append(this.solicitationTime);
-        return sb.toString();
+        return "ID: " + this.id + " - " +
+                "Name: " + this.name + " - " +
+                "Description: " + this.description + " - " +
+                "Solicitation Time: " + this.solicitationTime;
     }
 
 }
