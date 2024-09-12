@@ -4,14 +4,13 @@ import java.time.LocalDateTime;
 
 public class OS {
 
-    public static int nextId = 0;
-    private int id;
+    private int id = -1; // first id will be 0
     private String name;
     private String description;
     private LocalDateTime solicitationTime;
 
     public OS(String name, String description, LocalDateTime solicitationTime) {
-        this.id = nextId++;
+        this.id++;
         this.setName(name);
         this.setDescription(description);
         this.setSolicitationTime(solicitationTime);
