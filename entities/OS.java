@@ -4,20 +4,17 @@ import java.time.LocalDateTime;
 
 public class OS {
 
-    private int id = -1; // first id will be 0
+    private static int idCounter = 0;
+    private final int id;
     private String name;
     private String description;
     private LocalDateTime solicitationTime;
 
     public OS(String name, String description, LocalDateTime solicitationTime) {
-        this.id++;
+        this.id = idCounter++;
         this.setName(name);
         this.setDescription(description);
         this.setSolicitationTime(solicitationTime);
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void setName(String name) {
@@ -44,12 +41,13 @@ public class OS {
         return solicitationTime;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
-        return "ID: " + this.id + " - " +
-                "Name: " + this.name + " - " +
-                "Description: " + this.description + " - " +
-                "Solicitation Time: " + this.solicitationTime;
+        return "Id: " + this.id + " - " + "Name: " + this.name + " - " + "Description: " + this.description + " - " + "Solicitation Time: " + this.solicitationTime;
     }
 
 }
