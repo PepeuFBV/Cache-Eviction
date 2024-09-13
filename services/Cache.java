@@ -1,67 +1,81 @@
 package services;
 
 import entities.OS;
-import java.util.Queue;
+import services.database.LargestPrimeNumber;
 
-// uses FIFO logic when the cache is full (20 elements)
+import java.time.LocalDateTime;
+
+// uses hash logic to store up to 20 service orders
 public class Cache {
 
     // stores the last 20 service orders
-    private final Queue<OS> cache = new java.util.LinkedList<>();
-    final int maxSize = 20;
+    public final int maxSize = 20;
+    private int m;
+    private int primeMultiplier;
+    private int capacity;
+    private int size = 0;
+    private OS[] table;
 
-    public void add(OS os) {
-        if (cache.size() == 20) {
-            cache.poll(); // removes the first element
-        }
-        cache.add(os); // adds the new element to the end
+    public Cache() {
+        capacity = 20;
+        m = 20;
+        primeMultiplier = new LargestPrimeNumber(20).getLargestPrime();
+        table = new OS[capacity];
     }
 
-    // returns null if the service order is not in the cache/cache is empty
-    public OS get(int id) {
-        if (cache.isEmpty()) {
-            return null;
-        }
-        for (OS os : cache) {
-            if (os.getId() == id) {
-                return os;
-            }
-        }
-        return null;
+    // hash function using division method
+    private int hash(int id) {
+        return (id * primeMultiplier) % m;
+    }
+
+    public boolean isFull() {
+        return size == maxSize;
     }
 
     public boolean isEmpty() {
-        return cache.isEmpty();
-    }
-
-    public boolean hasSpace() {
-        return getSize() < maxSize;
-    }
-
-    public void remove(int id) {
-        if (cache.isEmpty()) {
-            return;
-        }
-        for (OS os : cache) {
-            if (os.getId() == id) {
-                cache.remove(os);
-                return;
-            }
-        }
+        return size == 0;
     }
 
     public int getSize() {
-        return cache.size();
+        return size;
+    }
+
+    // doesn't care if the cache is full, will overwrite the service order in the index
+    public void add(OS os) {
+        int index = hash(os.getId());
+        if (table[index] != null) {
+            size--;
+        }
+        table[index] = os;
+        size++;
+    }
+
+    public void remove(int key) {
+        int index = hash(key);
+        if (table[index] != null) {
+            table[index] = null;
+            size--;
+        }
+    }
+
+    public boolean isInCache(OS os) {
+        int index = hash(os.getId());
+        return table[index] != null && table[index].equals(os);
+    }
+
+    public OS search(int key) {
+        int index = hash(key);
+        return table[index];
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[ ");
-        for (OS os : cache) {
-            sb.append(os.getId()).append(", ");
+        for (OS os : table) {
+            if (os != null) {
+                sb.append(os.toString()).append("\n");
+            }
         }
-        sb.append(" ]");
         return sb.toString();
     }
 
