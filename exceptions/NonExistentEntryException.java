@@ -1,4 +1,4 @@
-package exceptions.treeExceptions;
+package exceptions;
 
 public class NonExistentEntryException extends Exception {
     public NonExistentEntryException(String message) {
