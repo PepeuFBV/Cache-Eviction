@@ -6,8 +6,11 @@ public class Main {
 
     public static void main(String[] args) {
         Service service = new Service();
+        service.turnOffIncreaseCapacity();
+
         showOptions();
-        create60OS(service);
+        //create60OS(service);
+        create200OS(service);
         Scanner scanner = new Scanner(System.in);
         System.out.print("-> ");
         int option = scanner.nextInt();
@@ -34,7 +37,7 @@ public class Main {
                     int id = scanner.nextInt();
                     try {
                         OS found = service.searchServiceOrder(id);
-                        if (found != null) System.out.println(found.getId() + " - " + found.getName() + " - " + found.getDescription() + " - " + found.getSolicitationTime() + "\n");
+                        if (found != null) System.out.println(found.getName() + " - " + found.getDescription() + " - " + found.getSolicitationTime() + "\n");
                         else System.out.println("Service Order not found\n");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
@@ -50,7 +53,7 @@ public class Main {
                     int idToAlter = scanner.nextInt();
                     OS found = service.searchServiceOrder(idToAlter);
                     if (found != null) {
-                        System.out.println(found.getId() + " - " + found.getName() + " - " + found.getDescription() + " - " + found.getSolicitationTime());
+                        System.out.println(found.getName() + " - " + found.getDescription() + " - " + found.getSolicitationTime());
                         System.out.println("Are you sure you want to alter this Service Order? (y/n)");
                         String answer = scanner.next();
                         if (answer.equals("y")) {
@@ -131,6 +134,18 @@ public class Main {
             }
         }
         System.out.println("60 Service Orders created\n");
+    }
+
+    private static void create200OS(Service service) {
+        for (int i = 0; i < 200; i++) {
+            OS os = new OS("OS" + i, "Description" + i, java.time.LocalDateTime.now());
+            try {
+                service.addNewServiceOrder(os);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        System.out.println("200 Service Orders created\n");
     }
 
 }
