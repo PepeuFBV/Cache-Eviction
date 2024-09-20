@@ -16,7 +16,7 @@ git clone https://github.com/PepeuFBV/CacheImpl
 
 ## How it works
 
-The client has a console options to interact with the service orders on the server. The server has a database implemented with AVL Tree structure and a cache implemented with a simple FIFO algorithm.
+The client has a console options to interact with the service orders on the server. The server has a database and cache, both implemented through a Hash Table.
 
 ```
 [ 1 ] - Create a new Service Order
@@ -33,12 +33,8 @@ The client has a console options to interact with the service orders on the serv
 
 ## How to use
 
-Choose an option and follow the instructions on the console. There is also a log file that will be created (_/log/log.txt_) with all the operations made by the client, as well as the cache status, tree height and the rotations made by the AVL Tree.
+Choose an option and follow the instructions on the console. There is also a log file that will be created (_/log/log.txt_) with all the operations made by the client, as well as the cache status, tree height and the rotations made by the AVL Tree. Make sure to clear the log file if you want to start fresh, if the log file creation is triggering an error, create the log directory manually.
 
-## About the AVL Tree
+## About the Hash Tables
 
-The AVL Tree is a self-balancing binary search tree. It was chosen because it has a good balance between search and insert operations. The tree is implemented in the `AVLTree` class.
-
-## Extra information
-
-The cache has a fixed size of 20 elements, but it can be changed in the `Cache` class. The AVL Tree has no fixed size. The insert, search and alter Service Order operations all add the Service Order to the cache. The remove operation removes the Service Order from the tree, and if it's in the cache, it will be removed from there too.
+The implemented Hash Tables use the simple division hash function, and the collision resolution is done through the usage of a linked list. The hash table in the cache has a fixed size of 20 elements, and the hash table in the database has a starting size of 127 elements, but it can grow dynamically, if turned on in the a `Service` class method. The growth is through the finding of the next prime number before the new size desired.
