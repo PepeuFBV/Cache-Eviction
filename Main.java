@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         Service service = new Service();
-        service.turnOffIncreaseCapacity();
+        //service.turnOffIncreaseCapacity();
 
         showOptions();
         //create60OS(service);
@@ -138,7 +138,7 @@ public class Main {
 
     private static void create200OS(Service service) {
         for (int i = 0; i < 200; i++) {
-            OS os = new OS("OS" + i, "Description" + i, java.time.LocalDateTime.now());
+            OS os = new OS("OS" + i, "Description", java.time.LocalDateTime.now());
             try {
                 service.addNewServiceOrder(os);
             } catch (Exception e) {
