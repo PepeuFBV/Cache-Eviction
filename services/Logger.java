@@ -79,18 +79,4 @@ public class Logger {
         }
     }
 
-    /*public void saveTree(Node root) {
-        try {
-            createTreeFile();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        try (FileWriter fileWriter = new FileWriter(defaultTreeLogPath)) {
-            fileWriter.write(root.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
 }

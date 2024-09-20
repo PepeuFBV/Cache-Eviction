@@ -35,11 +35,19 @@ public class Service {
 
     public void addNewServiceOrder(OS os) throws DuplicateEntryException {
         logger.log("[" + getCurrentTime() + "] Creating new Service Order");
-        cache.add(os);
-        logger.log("[" + getCurrentTime() + "] Service Order added to cache");
-        hashTable.add(os);
-        logger.log("[" + getCurrentTime() + "] Service Order added to database");
-        logData(true);
+        if (isInCache(os)) { // check if service order already exists in cache
+            logger.log("[" + getCurrentTime() + "] Service Order already exists in cache");
+            throw new DuplicateEntryException("Service Order already exists in cache");
+        } else if (isInDatabase(os)) { // check if service order already exists in database
+            logger.log("[" + getCurrentTime() + "] Service Order already exists in database");
+            throw new DuplicateEntryException("Service Order already exists in database");
+        } else {
+            cache.add(os);
+            logger.log("[" + getCurrentTime() + "] Service Order added to cache");
+            hashTable.add(os);
+            logger.log("[" + getCurrentTime() + "] Service Order added to database");
+            logData(true);
+        }
     }
 
     private String getCurrentTime() {
@@ -69,7 +77,7 @@ public class Service {
             return "Cache is empty\n";
         }
         logData(true);
-        return cache.toString();
+        return cache + "There are a total of " + hashTable.getSize() + " Service Orders in the cache, with a total size of " + hashTable.getCapacity() + "\n";
     }
 
     public OS searchServiceOrder(int id) {
@@ -169,7 +177,7 @@ public class Service {
         return cache.search(os.getId()) != null;
     }
 
-    private boolean isInTree(OS os) {
+    private boolean isInDatabase(OS os) {
         return hashTable.search(os.getId()) != null;
     }
 
