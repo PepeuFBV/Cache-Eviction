@@ -9,8 +9,7 @@ public class Main {
         //service.turnOffIncreaseCapacity();
 
         showOptions();
-        //create60OS(service);
-        create200OS(service);
+        createXOS(service, 200);
         Scanner scanner = new Scanner(System.in);
         System.out.print("-> ");
         int option = scanner.nextInt();
@@ -124,20 +123,8 @@ public class Main {
         System.out.println("[8] - Exit");
     }
 
-    private static void create60OS(Service service) {
-        for (int i = 0; i < 60; i++) {
-            OS os = new OS("OS" + i, "Description" + i, java.time.LocalDateTime.now());
-            try {
-                service.addNewServiceOrder(os);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        System.out.println("60 Service Orders created\n");
-    }
-
-    private static void create200OS(Service service) {
-        for (int i = 0; i < 200; i++) {
+    private static void createXOS(Service service, int x) {
+        for (int i = 0; i < x; i++) {
             OS os = new OS("OS" + i, "Description", java.time.LocalDateTime.now());
             try {
                 service.addNewServiceOrder(os);
@@ -145,7 +132,7 @@ public class Main {
                 System.out.println(e.getMessage());
             }
         }
-        System.out.println("200 Service Orders created\n");
+        System.out.println(x + " Service Orders created\n");
     }
 
 }
