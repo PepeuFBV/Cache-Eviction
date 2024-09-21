@@ -10,18 +10,18 @@ public class HashTable {
     private int capacity; // number of elements the hash table can store
     private int size = 0; // number of elements currently in the hash table
     private boolean mayIncreaseCapacity = true;
-    private int threshold = 75 * 3; // percentage of the table that can be filled before increasing capacity (*3 for maximum of 225%)
+    private int threshold = 250; // percentage of the table that can be filled before increasing capacity (default is 250%)
     private LinkedList<OS>[] table;
 
     @SuppressWarnings("unchecked")
     public HashTable() {
-        this(31, 75);
+        this(31, 250);
         this.capacity = 7; // initial capacity of 7 indexes
         this.table = (LinkedList<OS>[]) new LinkedList[capacity];
     }
 
     public HashTable(int primeMultiplier) {
-        this(primeMultiplier, 75);
+        this(primeMultiplier, 250);
     }
 
     @SuppressWarnings("unchecked")
@@ -29,7 +29,7 @@ public class HashTable {
         this.capacity = 7; // initial capacity
         this.table = (LinkedList<OS>[]) new LinkedList[capacity];
         this.primeMultiplier = (primeMultiplier > 0) ? primeMultiplier : 31;
-        if (threshold > 0 && threshold <= 100) {
+        if (threshold > 0 ) {
             this.threshold = threshold;
         }
     }
@@ -75,12 +75,13 @@ public class HashTable {
 
     private void increaseCapacity() {
         LinkedList<OS>[] oldTable = table;
-        capacity = new LargestPrimeNumber((int) Math.pow(capacity, 2)).getLargestPrime(); // get the largest prime number smaller than the square of the current capacity
+        capacity = new LargestPrimeNumber(capacity * 2).getLargestPrime(); // get the largest prime number smaller than double of the current capacity
         table = rehash(oldTable);
     }
 
     public void add(OS serviceOrder) {
-        if ((size >= (capacity * threshold / 100)) && mayIncreaseCapacity) {
+        if (((float)(size) >= ((float) (capacity * threshold) / 100)) && mayIncreaseCapacity) {
+            System.out.println("Size: " + size + " Capacity: " + capacity + " Threshold: " + threshold);
             increaseCapacity();
         }
 
