@@ -146,6 +146,8 @@ public class HashTable {
                     }
                 }
                 sb.append(" ]\n");
+            } else {
+                sb.append(listI).append(": [ ]\n");
             }
 
             listI++;
