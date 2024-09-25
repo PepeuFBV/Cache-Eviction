@@ -2,6 +2,8 @@ package services.database;
 
 import entities.OS;
 import exceptions.NonExistentEntryException;
+import services.Logger;
+
 import java.util.LinkedList;
 
 public class HashTable {
@@ -12,26 +14,28 @@ public class HashTable {
     private boolean mayIncreaseCapacity = true;
     private int threshold = 250; // percentage of the table that can be filled before increasing capacity (default is 250%)
     private LinkedList<OS>[] table;
+    private final Logger logger;
 
     @SuppressWarnings("unchecked")
-    public HashTable() {
-        this(31, 250);
+    public HashTable(Logger logger) {
+        this(31, 250, logger);
         this.capacity = 7; // initial capacity of 7 indexes
         this.table = (LinkedList<OS>[]) new LinkedList[capacity];
     }
 
-    public HashTable(int primeMultiplier) {
-        this(primeMultiplier, 250);
+    public HashTable(int primeMultiplier, Logger logger) {
+        this(primeMultiplier, 250, logger);
     }
 
     @SuppressWarnings("unchecked")
-    public HashTable(int primeMultiplier, int threshold) {
+    public HashTable(int primeMultiplier, int threshold, Logger logger) {
         this.capacity = 7; // initial capacity
         this.table = (LinkedList<OS>[]) new LinkedList[capacity];
         this.primeMultiplier = (primeMultiplier > 0) ? primeMultiplier : 31;
         if (threshold > 0 ) {
             this.threshold = threshold;
         }
+        this.logger = logger;
     }
 
     public void setMayIncreaseCapacity(boolean mayIncreaseCapacity) {
@@ -76,35 +80,42 @@ public class HashTable {
     private void increaseCapacity() {
         LinkedList<OS>[] oldTable = table;
         capacity = new LargestPrimeNumber(capacity * 2).getLargestPrime(); // get the largest prime number smaller than double of the current capacity
+        logger.log("Database is full, increasing capacity to " + capacity);
         table = rehash(oldTable);
+        logger.log("Rehashed old Service Orders to the new table");
     }
 
     public void add(OS serviceOrder) {
         if (((float)(size) >= ((float) (capacity * threshold) / 100)) && mayIncreaseCapacity) {
-            System.out.println("Size: " + size + " Capacity: " + capacity + " Threshold: " + threshold);
+            logger.log("Database is " + threshold + "% full, increasing capacity");
             increaseCapacity();
         }
 
         int index = hash(serviceOrder.getId());
-        if (table[index] == null) {
+        if (table[index] == null) { // creates a new LinkedList if the index is empty
+            logger.log("Creating new LinkedList at index " + index);
             table[index] = new LinkedList<>();
+            table[index].add(serviceOrder);
+            size++;
         }
-
-        for (OS os : table[index]) { // check if service order already exists index List
-            if (os.getId() == serviceOrder.getId()) {
-                return;
+        else {
+            for (OS os : table[index]) { // checks if the OS is already in the database
+                if (os.getId() == serviceOrder.getId()) {
+                    logger.log("Service Order ID " + serviceOrder.getId() + " already exists in the database");
+                    return;
+                }
             }
         }
 
-        table[index].add(serviceOrder);
-        size++;
     }
 
     public OS search(int key) {
+        logger.log("Searching for Service Order with ID " + key);
         int index = hash(key);
         if (table[index] != null) {
             for (OS os : table[index]) {
                 if (os.getId() == key) {
+                    logger.log("Service Order ID " + key + " found in database");
                     return os;
                 }
             }
@@ -121,15 +132,18 @@ public class HashTable {
         if (table[index] != null) {
             for (OS os : table[index]) {
                 if (os.getId() == key) {
+                    logger.log("Removing Service Order with ID " + key);
                     table[index].remove(os);
                     size--;
                     if (table[index].isEmpty()) {
+                        logger.log("LinkedList at index " + index + " is empty, removing it");
                         table[index] = null;
                     }
                     return;
                 }
             }
         }
+        logger.log("Service Order ID " + key + " not found in database");
         throw new NonExistentEntryException("Service Order ID " + key + " not found in database");
     }
 

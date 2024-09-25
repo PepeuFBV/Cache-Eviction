@@ -7,31 +7,22 @@ public class Cache {
 
     public final int capacity = 20;
     private int size = 0;
-    private final OSK[] table;
-    private final int kIterationLimit = 10;
+    private final OS[] table;
+    private final int kIterationLimit = 100;
+    private final Logger logger;
 
-    private class OSK {
-        public final OS os;
-        public int k;
-
-        public OSK(OS os, int k) {
-            this.os = os;
-            this.k = k;
-        }
-
+    public Cache(Logger logger) {
+        table = new OS[capacity];
+        this.logger = logger;
     }
 
-    public Cache() {
-        table = new OSK[capacity];
-    }
-
+    // uses linear probing to find the next available index
     private int hash(int id) {
-        return this.hash(id, 0);
+        return id % 20; // 19 is a prime number
     }
 
-    // h(x, k) = (x * 31 + k * 17) % 20
-    private int hash(int id, int k) {
-        return (id * 31 + k * 17) % capacity;
+    private int linearProbing(int id, int k) {
+        return (hash(id) + k) % 20;
     }
 
     public boolean isFull() {
@@ -46,63 +37,80 @@ public class Cache {
         return size;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
 
     public void add(OS os) {
-        if (!isFull()) {
-            for (int k = 0; k < capacity; k++) {
-                int index = hash(os.getId(), k);
-                if (table[index] == null) {
-                    table[index] = new OSK(os, k);
-                    size++;
+        if (isFull()) {
+            logger.log("Cache is full, substituting the index with the corresponding Service Order");
+            int index = hash(os.getId());
+            table[index] = os; // substitutes the index with the new OS
+        } else { // needs to find an empty index for the new OS
+            int index = hash(os.getId());
+
+            // linear probing until an empty index is found
+            int iterations = 0;
+            while (table[index] != null) {
+                index = linearProbing(os.getId(), ++iterations);
+                if (iterations > kIterationLimit) {
+                    logger.log("Reached the iteration limit, can't add the Service Order to the cache");
                     return;
                 }
             }
-        } else { // remove the OS in the new index placement
-            int index = hash(os.getId());
-            if (table[index] != null) {
-                table[index] = null;
-                table[index] = new OSK(os, 0);
-            }
+            table[index] = os;
+            size++;
         }
     }
 
     public void remove(int key) {
         for (int k = 0; k < capacity; k++) {
-            int index = hash(key, k);
-            if (table[index] != null && table[index].os.getId() == key) {
+            int index = linearProbing(key, k);
+            if (table[index] != null && table[index].getId() == key) {
                 table[index] = null;
                 size--;
                 return;
+            } else {
+                logger.log("Service Order ID " + key + " not found in cache (k = " + k + "), increasing k value");
             }
         }
     }
 
     public void remove(OS os) {
-        for (int k = 0; k < capacity; k++) {
-            int index = hash(os.getId(), k);
-            if (table[index] != null && table[index].os.equals(os)) {
-                table[index] = null;
-                size--;
-                return;
-            }
-        }
+        remove(os.getId());
     }
 
     public boolean isInCache(OS os) {
-        for (int k = 0; k < capacity; k++) { // iterate through all possible k values
-            int index = hash(os.getId(), k);
-            if (table[index] != null && table[index].os.equals(os)) {
+        int index = hash(os.getId());
+
+        // linear probing until the OS is found or an empty index is found
+        int iterations = 0;
+        while (table[index] != null) {
+            if (table[index].equals(os)) {
                 return true;
+            }
+            index = linearProbing(index, ++iterations);
+            if (iterations > kIterationLimit) {
+                logger.log("Reached the iteration limit, OS not found in cache");
+                return false;
             }
         }
         return false;
     }
 
     public OS search(int key) {
-        for (int k = 0; k < capacity; k++) {
-            int index = hash(key, k);
-            if (table[index] != null && table[index].os.getId() == key) {
-                return table[index].os;
+        int index = hash(key);
+
+        // linear probing to search for the OS
+        int iterations = 0;
+        while (table[index] != null) {
+            if (table[index].getId() == key) {
+                return table[index];
+            }
+            index = linearProbing(key, ++iterations);
+            if (iterations > kIterationLimit) {
+                logger.log("Reached the iteration limit, OS not found in cache");
+                return null;
             }
         }
         return null;
@@ -111,11 +119,9 @@ public class Cache {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (OSK osk : table) {
-            if (osk != null) {
-                if (osk.os != null) {
-                    sb.append(osk.os.toString()).append("\n");
-                }
+        for (int i = 0; i < capacity; i++) {
+            if (table[i] != null) {
+                sb.append(table[i]).append("\n");
             }
         }
         return sb.toString();

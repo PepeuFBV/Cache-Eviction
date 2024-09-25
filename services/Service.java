@@ -15,9 +15,9 @@ public class Service {
     public Service() {
         this.logger = Logger.getInstance();
         logger.log("\n\nStarting services at " + showDateAndTime());
-        this.cache = new Cache();
+        this.cache = new Cache(logger);
         logger.log("[" + getCurrentTime() + "] Cache created");
-        this.hashTable = new HashTable();
+        this.hashTable = new HashTable(logger);
         logger.log("[" + getCurrentTime() + "] HashTable created");
     }
 
@@ -41,11 +41,11 @@ public class Service {
         } else if (isInDatabase(os)) { // check if service order already exists in database
             logger.log("[" + getCurrentTime() + "] Service Order already exists in database");
             throw new DuplicateEntryException("Service Order already exists in database");
-        } else {
-            cache.add(os);
-            logger.log("[" + getCurrentTime() + "] Service Order added to cache");
+        } else { // service order doesn't exist in cache or database
             hashTable.add(os);
             logger.log("[" + getCurrentTime() + "] Service Order added to database");
+            cache.add(os);
+            logger.log("[" + getCurrentTime() + "] Service Order added to cache");
             logData(true);
         }
     }
@@ -64,11 +64,15 @@ public class Service {
 
     public String seeAllServiceOrders() {
         logger.log("[" + getCurrentTime() + "] Listing all Service Orders");
-        if (hashTable.isEmpty()) {
+        if (cache.isEmpty()) {
             return "Database is empty\n";
         }
-        logData(true);
-        return hashTable + "There are a total of " + hashTable.getSize() + " Service Orders in the database, with a total size of " + hashTable.getCapacity() + "\n";
+        else if (hashTable.isEmpty()) {
+            return "Database is empty\n";
+        } else {
+            logData(true);
+            return hashTable + "There are a total of " + hashTable.getSize() + " Service Orders in the database, with a total size of " + hashTable.getCapacity() + "\n";
+        }
     }
 
     public String seeCache() {
@@ -77,7 +81,7 @@ public class Service {
             return "Cache is empty\n";
         }
         logData(true);
-        return cache + "There are a total of " + hashTable.getSize() + " Service Orders in the cache, with a total size of " + hashTable.getCapacity() + "\n";
+        return cache + "There are a total of " + cache.getSize() + " Service Orders in the cache, with a total size of " + cache.getCapacity() + "\n";
     }
 
     public OS searchServiceOrder(int id) {

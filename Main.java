@@ -9,7 +9,7 @@ public class Main {
         //service.turnOffIncreaseCapacity();
 
         showOptions();
-        createXOS(service, 1000);
+        createXOS(service, 25);
         Scanner scanner = new Scanner(System.in);
         System.out.print("-> ");
         int option = scanner.nextInt();
