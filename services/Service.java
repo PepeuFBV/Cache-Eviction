@@ -64,14 +64,14 @@ public class Service {
 
     public String seeAllServiceOrders() {
         logger.log("[" + getCurrentTime() + "] Listing all Service Orders");
-        if (cache.isEmpty()) {
+        if (cache.isEmpty()) { // checks for faster answer if cache is empty
             return "Database is empty\n";
         }
         else if (hashTable.isEmpty()) {
             return "Database is empty\n";
         } else {
             logData(true);
-            return hashTable + "There are a total of " + hashTable.getSize() + " Service Orders in the database, with a total size of " + hashTable.getCapacity() + "\n";
+            return hashTable + "The database is " + String.format("%.2f", ((float) hashTable.getSize() / hashTable.getCapacity() * 100)) + "% full\n" + "There are a total of " + hashTable.getSize() + " Service Orders in the database, with a total size of " + hashTable.getCapacity() + " indexes\n";
         }
     }
 
@@ -81,30 +81,28 @@ public class Service {
             return "Cache is empty\n";
         }
         logData(true);
-        return cache + "There are a total of " + cache.getSize() + " Service Orders in the cache, with a total size of " + cache.getCapacity() + "\n";
+        return cache + "\nThere are a total of " + cache.getSize() + " Service Orders in the cache, with a total size of " + cache.getCapacity() + "\n";
     }
 
     public OS searchServiceOrder(int id) {
         logger.log("[" + getCurrentTime() + "] Searching for Service Order with ID " + id);
         if (hashTable.isEmpty()) {
             logger.log("[" + getCurrentTime() + "] Database is empty");
-            return null;
-        }
+        } else {
 
-        if (cache.search(id) != null) { // OS exists in the cache
-            logger.log("[" + getCurrentTime() + "] Service Order found in cache");
-            cache.add(hashTable.search(id)); // adds to the end of the cache
-            logData(true);
-            return cache.search(id); // returns the OS
+            if (cache.search(id) != null) { // OS exists in the cache
+                logger.log("[" + getCurrentTime() + "] Service Order found in cache");
+                cache.add(hashTable.search(id)); // adds to the end of the cache
+                logData(true);
+                return cache.search(id); // returns the OS
+            } else if (hashTable.search(id) != null) { // OS exists in the tree
+                logger.log("[" + getCurrentTime() + "] Service Order found in database");
+                cache.add(hashTable.search(id)); // adds to cache
+                logData(true);
+                return hashTable.search(id); // returns the OS
+            }
+            logger.log("[" + getCurrentTime() + "] Service Order not found in database");
         }
-
-        if (hashTable.search(id) != null) { // OS exists in the tree
-            logger.log("[" + getCurrentTime() + "] Service Order found in tree");
-            cache.add(hashTable.search(id)); // adds to cache
-            logData(true);
-            return hashTable.search(id); // returns the OS
-        }
-        logger.log("[" + getCurrentTime() + "] Service Order not found in tree");
         return null;
     }
 
@@ -151,7 +149,7 @@ public class Service {
         throw new NonExistentEntryException("Service Order ID " + id + " not found in database");
     }
 
-    public void alterServiceOrder(int id, OS newServiceOrderData) {
+    public void alterServiceOrder(int id, OS newServiceOrder) {
         logger.log("[" + getCurrentTime() + "] Altering Service Order with ID " + id);
 
         if (cache.search(id) != null) { // OS exists in the cache
@@ -161,12 +159,13 @@ public class Service {
         }
 
         OS serviceOrder = hashTable.search(id);
-        serviceOrder.setName(newServiceOrderData.getName());
-        serviceOrder.setDescription(newServiceOrderData.getDescription());
+        serviceOrder.setName(newServiceOrder.getName());
+        serviceOrder.setDescription(newServiceOrder.getDescription());
         logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " altered");
 
         cache.add(hashTable.search(id));
         logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " added to cache");
+
 
         logData(true);
     }

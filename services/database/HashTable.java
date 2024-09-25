@@ -12,19 +12,19 @@ public class HashTable {
     private int capacity; // number of elements the hash table can store
     private int size = 0; // number of elements currently in the hash table
     private boolean mayIncreaseCapacity = true;
-    private int threshold = 250; // percentage of the table that can be filled before increasing capacity (default is 250%)
+    private int threshold; // percentage of the table that can be filled before increasing capacity (default is 250%)
     private LinkedList<OS>[] table;
     private final Logger logger;
 
     @SuppressWarnings("unchecked")
     public HashTable(Logger logger) {
-        this(31, 250, logger);
+        this(31, 225, logger);
         this.capacity = 7; // initial capacity of 7 indexes
         this.table = (LinkedList<OS>[]) new LinkedList[capacity];
     }
 
     public HashTable(int primeMultiplier, Logger logger) {
-        this(primeMultiplier, 250, logger);
+        this(primeMultiplier, 225, logger);
     }
 
     @SuppressWarnings("unchecked")
@@ -98,24 +98,24 @@ public class HashTable {
             table[index].add(serviceOrder);
             size++;
         }
-        else {
+        else { // adds to the end of the LinkedList if the index is not empty
             for (OS os : table[index]) { // checks if the OS is already in the database
-                if (os.getId() == serviceOrder.getId()) {
+                if (os.getId() == serviceOrder.getId()) { // id is unique
                     logger.log("Service Order ID " + serviceOrder.getId() + " already exists in the database");
                     return;
                 }
             }
+            table[index].add(serviceOrder);
+            size++;
         }
 
     }
 
     public OS search(int key) {
-        logger.log("Searching for Service Order with ID " + key);
         int index = hash(key);
         if (table[index] != null) {
             for (OS os : table[index]) {
                 if (os.getId() == key) {
-                    logger.log("Service Order ID " + key + " found in database");
                     return os;
                 }
             }
@@ -132,7 +132,6 @@ public class HashTable {
         if (table[index] != null) {
             for (OS os : table[index]) {
                 if (os.getId() == key) {
-                    logger.log("Removing Service Order with ID " + key);
                     table[index].remove(os);
                     size--;
                     if (table[index].isEmpty()) {
@@ -143,7 +142,6 @@ public class HashTable {
                 }
             }
         }
-        logger.log("Service Order ID " + key + " not found in database");
         throw new NonExistentEntryException("Service Order ID " + key + " not found in database");
     }
 

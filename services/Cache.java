@@ -42,24 +42,28 @@ public class Cache {
     }
 
     public void add(OS os) {
-        if (isFull()) {
-            logger.log("Cache is full, substituting the index with the corresponding Service Order");
-            int index = hash(os.getId());
-            table[index] = os; // substitutes the index with the new OS
-        } else { // needs to find an empty index for the new OS
-            int index = hash(os.getId());
+        if (isInCache(os)) {
+            logger.log("Service Order already exists in cache");
+        } else {
+            if (isFull()) {
+                logger.log("Cache is full, substituting the index with the corresponding Service Order");
+                int index = hash(os.getId());
+                table[index] = os; // substitutes the index with the new OS
+            } else { // needs to find an empty index for the new OS
+                int index = hash(os.getId());
 
-            // linear probing until an empty index is found
-            int iterations = 0;
-            while (table[index] != null) {
-                index = linearProbing(os.getId(), ++iterations);
-                if (iterations > kIterationLimit) {
-                    logger.log("Reached the iteration limit, can't add the Service Order to the cache");
-                    return;
+                // linear probing until an empty index is found
+                int iterations = 0;
+                while (table[index] != null) {
+                    index = linearProbing(os.getId(), ++iterations);
+                    if (iterations > kIterationLimit) {
+                        logger.log("Reached the iteration limit, can't add the Service Order to the cache");
+                        return;
+                    }
                 }
+                table[index] = os;
+                size++;
             }
-            table[index] = os;
-            size++;
         }
     }
 
@@ -81,49 +85,40 @@ public class Cache {
     }
 
     public boolean isInCache(OS os) {
-        int index = hash(os.getId());
-
-        // linear probing until the OS is found or an empty index is found
-        int iterations = 0;
-        while (table[index] != null) {
-            if (table[index].equals(os)) {
+        for (int i = 0; i < capacity; i++) {
+            if (table[i] != null && table[i].equals(os)) {
                 return true;
             }
-            index = linearProbing(index, ++iterations);
-            if (iterations > kIterationLimit) {
-                logger.log("Reached the iteration limit, OS not found in cache");
-                return false;
-            }
         }
+        logger.log("OS not found in cache");
         return false;
     }
 
     public OS search(int key) {
-        int index = hash(key);
-
-        // linear probing to search for the OS
-        int iterations = 0;
-        while (table[index] != null) {
-            if (table[index].getId() == key) {
-                return table[index];
-            }
-            index = linearProbing(key, ++iterations);
-            if (iterations > kIterationLimit) {
-                logger.log("Reached the iteration limit, OS not found in cache");
-                return null;
+        for (int i = 0; i < capacity; i++) {
+            if (table[i] != null && table[i].getId() == key) {
+                return table[i];
             }
         }
+        logger.log("Service Order ID " + key + " not found in cache");
         return null;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
+        boolean first = true;
         for (int i = 0; i < capacity; i++) {
             if (table[i] != null) {
-                sb.append(table[i]).append("\n");
+                if (!first) {
+                    sb.append(", ");
+                }
+                sb.append(table[i].getId());
+                first = false;
             }
         }
+        sb.append(" ]");
         return sb.toString();
     }
 
