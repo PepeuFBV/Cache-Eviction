@@ -9,14 +9,20 @@ This is only a client usage simulation, as the client side isn't implemented yet
 1. Clone the repository
 
 ```bash
-git clone https://github.com/PepeuFBV/CacheImpl
+git clone https://github.com/PepeuFBV/CacheImpl.git
+cd CacheImpl
 ```
 
 2. Run the `Main` class
 
+```bash
+javac Main.java
+java Main
+```
+
 ## How it works
 
-The client has a console options to interact with the service orders on the server. The server has a database and cache, both implemented through a Hash Table.
+The client has a console options to interact with the service orders on the server. The server has a database and cache, both implemented through a HashTable. The cache is used to speed up the search for service orders, and the database is used to store all the service orders. The cache has a fixed size of 20 elements, and the database has a dynamic size and can grow if needed.
 
 ```
 [ 1 ] - Create a new Service Order
@@ -37,4 +43,8 @@ Choose an option and follow the instructions on the console. There is also a log
 
 ## About the Hash Tables
 
-The implemented Hash Tables use the simple division hash function, and the collision resolution is done through the usage of a linked list. The hash table in the cache has a fixed size of 20 elements, and the hash table in the database has a starting size of 127 elements, but it can grow dynamically, if turned on in the a `Service` class method. The growth is through the finding of the next prime number before the new size desired.
+The implemented HashTables use the simple division hash function, and the collision resolution in the cache is done through linear probing. The hash table in the cache has a fixed size of 20 elements, and the hash table in the database has a starting size of 7 elements, but it can grow dynamically if turned on in a HashTable class method (on by default). The growth is through finding the next prime number before the new size desired, old size * 2 + 1; and rehashing all the elements to the new table.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
