@@ -18,7 +18,7 @@ public class Cache {
 
     // uses linear probing to find the next available index
     private int hash(int id) {
-        return id % 20; // 19 is a prime number
+        return id % 20;
     }
 
     private int linearProbing(int id, int k) {
