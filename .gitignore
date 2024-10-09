@@ -1,1 +1,8 @@
+# logs
 log/*
+
+# .idea files
+.idea/*
+
+# production files
+out/*
