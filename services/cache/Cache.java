@@ -2,13 +2,11 @@ package services.cache;
 
 import entities.OS;
 import services.Logger;
-
-import java.security.KeyPair;
 import java.util.LinkedList;
 
+// capacity: 30
 public class Cache {
 
-    private final int capacity = 30;
     private final Logger logger;
     private final LinkedList<CacheEntry> cache;
 
@@ -18,6 +16,7 @@ public class Cache {
     }
 
     public void add(OS os) {
+        int capacity = 30;
         if (cache.size() == capacity) {
             cache.removeLast(); // remove the last element from cache (lowest priority)
             logger.log("[" + getCurrentTime() + "] Removed the first element from cache");
@@ -25,9 +24,19 @@ public class Cache {
         cache.add(new CacheEntry(os));
         logger.log("[" + getCurrentTime() + "] Added a new element to cache");
     }
-    
+
     public boolean isInCache(OS os) {
-        return cache.contains(os);
+        for (CacheEntry cacheEntry : cache) {
+            if (cacheEntry.getOs() == os) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void clearCache() {
+        cache.clear();
+        logger.log("[" + getCurrentTime() + "] Cache cleared");
     }
 
     private String getCurrentTime() {
