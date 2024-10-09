@@ -9,14 +9,17 @@ public class LargestPrimeNumber {
         this.number = number;
     }
 
+    // for getting the largest prime ABOVE the given number
     public int getLargestPrime() {
         if (number <= 1) {
             return -1;
         }
-        for (int i = number; i > 1; i--) {
+        int i = number;
+        while (i < Integer.MAX_VALUE) {
             if (isPrime(i)) {
                 return i;
             }
+            i++;
         }
         return -1;
     }
