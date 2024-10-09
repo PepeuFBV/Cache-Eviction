@@ -39,6 +39,10 @@ public class CacheEntry {
         return false;
     }
 
+    public boolean equals(OS os) {
+        return this.os.equals(os);
+    }
+
     @Override
     public String toString() {
         return os.toString();

@@ -25,6 +25,10 @@ public class Cache {
         cache.add(new CacheEntry(os));
         logger.log("[" + getCurrentTime() + "] Added a new element to cache");
     }
+    
+    public boolean isInCache(OS os) {
+        return cache.contains(os);
+    }
 
     private String getCurrentTime() {
         return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
