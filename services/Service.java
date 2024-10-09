@@ -3,6 +3,7 @@ package services;
 import entities.OS;
 import exceptions.DuplicateEntryException;
 import exceptions.NonExistentEntryException;
+import services.cache.Cache;
 import services.database.HashTable;
 import java.io.IOException;
 
