@@ -93,14 +93,15 @@ public class Service {
 
             if (cache.isInCache(id)) { // OS exists in the cache
                 logger.log("[" + getCurrentTime() + "] Service Order found in cache");
-                cache.get(id).
+                OS os = cache.search(id);
                 logData(true);
-                return cache.get(id); // returns the OS
-            } else if (hashTable.search(id) != null) { // OS exists in the database
+                return os;
+            } else if (hashTable.search(id) != null) { // OS exists only in the database
                 logger.log("[" + getCurrentTime() + "] Service Order found in database");
-                cache.add(hashTable.search(id)); // adds to cache
+                OS os = hashTable.search(id);
+                cache.add(os); // adds to cache
                 logData(true);
-                return hashTable.search(id); // returns the OS
+                return os;
             }
             logger.log("[" + getCurrentTime() + "] Service Order not found in database");
         }
@@ -116,7 +117,7 @@ public class Service {
 
             if (cache.search(id) != null) { // OS exists in the cache
                 logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " found in cache");
-                OS os = cache.search(id);
+                OS os = cache.search(id); // will increase the os priority, but it's later removed from the cache
                 cache.remove(id);
                 logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " removed from cache");
                 try {
@@ -131,9 +132,6 @@ public class Service {
             } else { // OS is not in the cache
                 if (hashTable.search(id) != null) { // OS exists in the tree
                     logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " found in database");
-                    OS os = hashTable.search(id);
-                    cache.remove(id); // removes the OS from the cache, due to the search method's default behavior
-                    logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " removed from cache");
                     try {
                         hashTable.remove(id);
                         logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " removed from database");
@@ -155,7 +153,11 @@ public class Service {
 
         if (cache.search(id) != null) { // OS exists in the cache
             logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " found in cache");
-            cache.remove(id);
+            try {
+                cache.remove(id);
+            } catch (NonExistentEntryException e) {
+                logger.log("[" + getCurrentTime() + "] " + e.getMessage());
+            }
             logger.log("[" + getCurrentTime() + "] Service Order ID " + id + " removed from cache");
         }
 

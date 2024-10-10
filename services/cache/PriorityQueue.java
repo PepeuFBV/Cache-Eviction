@@ -1,5 +1,7 @@
 package services.cache;
 
+import exceptions.NonExistentEntryException;
+
 import java.util.Iterator;
 
 // priority heap
@@ -74,8 +76,37 @@ public class PriorityQueue implements Iterable<CacheEntry> {
         }
     }
 
+    // method only for using when explicitly removing an element from the heap
+    public void remove(int id) throws NonExistentEntryException {
+        if (size() == 1 || first == null) { // if there's only one element or none
+            first = null;
+            last = null;
+            size = 0;
+        } else { // more than one element
+            Node current = first;
+            while (current.next != last) {
+                current = current.next;
+            }
+            current.next = null;
+            last = current;
+            size--;
+            return;
+        }
+        throw new NonExistentEntryException("Element not found in cache");
+    }
+
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
+    }
+
     public int size() {
         return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     @Override
