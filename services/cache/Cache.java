@@ -7,6 +7,10 @@ import java.util.LinkedList;
 // capacity: 30
 public class Cache {
 
+    private static String getCurrentTime() {
+        return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+    }
+
     private final Logger logger;
     private final LinkedList<CacheEntry> cache;
 
@@ -39,8 +43,6 @@ public class Cache {
         logger.log("[" + getCurrentTime() + "] Cache cleared");
     }
 
-    private String getCurrentTime() {
-        return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
 }

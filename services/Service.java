@@ -8,6 +8,10 @@ import services.database.HashTable;
 import java.io.IOException;
 
 public class Service {
+    
+    private static String getCurrentTime() {
+        return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+    }
 
     private final Cache cache;
     private final Logger logger;
@@ -49,10 +53,6 @@ public class Service {
             logger.log("[" + getCurrentTime() + "] Service Order added to cache");
             logData(true);
         }
-    }
-
-    private String getCurrentTime() {
-        return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
     public String clearLog() throws IOException {
