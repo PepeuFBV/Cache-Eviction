@@ -1,7 +1,9 @@
 package services.cache;
 
+import java.util.Iterator;
+
 // priority heap
-public class PriorityQueue {
+public class PriorityQueue implements Iterable<CacheEntry> {
 
     private Node first = null;
     private Node last = null;
@@ -74,6 +76,25 @@ public class PriorityQueue {
 
     public int size() {
         return size;
+    }
+
+    @Override
+    public Iterator<CacheEntry> iterator() {
+        return new Iterator<CacheEntry>() {
+            private Node current = first;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public CacheEntry next() {
+                CacheEntry entry = current.entry;
+                current = current.next;
+                return entry;
+            }
+        };
     }
 
 }
