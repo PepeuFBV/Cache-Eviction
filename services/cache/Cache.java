@@ -43,6 +43,17 @@ public class Cache {
         logger.log("[" + getCurrentTime() + "] Cache cleared");
     }
 
+    public boolean isEmpty() {
+        return cache.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (CacheEntry cacheEntry : cache) {
+            sb.append(cacheEntry.getOs().getName()).append(" - ").append(cacheEntry.getOs().getDescription()).append(" - ").append(cacheEntry.getOs().getSolicitationTime()).append("\n");
+        }
+        return sb.toString();
     }
 
 }
