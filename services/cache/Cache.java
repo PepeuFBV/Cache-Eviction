@@ -46,6 +46,35 @@ public class Cache {
         return false;
     }
 
+    public boolean isInCache(int id) {
+        for (CacheEntry cacheEntry : cache) {
+            if (cacheEntry.getOs().getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public OS get(int id) {
+        for (CacheEntry cacheEntry : cache) {
+            if (cacheEntry.getOs().getId() == id) {
+                return cacheEntry.getOs();
+            }
+        }
+        return null;
+    }
+
+    public void increasePriority(int id) {
+        for (CacheEntry cacheEntry : cache) {
+            if (cacheEntry.getOs().getId() == id) {
+                cache.remove(cacheEntry);
+                cache.addFirst(cacheEntry);
+                logger.log("[" + getCurrentTime() + "] Increased priority of Service Order ID " + id);
+                return;
+            }
+        }
+    }
+
     public void clearCache() {
         cache.clear();
         logger.log("[" + getCurrentTime() + "] Cache cleared");

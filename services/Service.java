@@ -8,7 +8,7 @@ import services.database.HashTable;
 import java.io.IOException;
 
 public class Service {
-    
+
     private static String getCurrentTime() {
         return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
@@ -91,12 +91,12 @@ public class Service {
             logger.log("[" + getCurrentTime() + "] Database is empty");
         } else {
 
-            if (cache.search(id) != null) { // OS exists in the cache
+            if (cache.isInCache(id)) { // OS exists in the cache
                 logger.log("[" + getCurrentTime() + "] Service Order found in cache");
-                cache.add(hashTable.search(id)); // adds to the end of the cache
+                cache.get(id).
                 logData(true);
-                return cache.search(id); // returns the OS
-            } else if (hashTable.search(id) != null) { // OS exists in the tree
+                return cache.get(id); // returns the OS
+            } else if (hashTable.search(id) != null) { // OS exists in the database
                 logger.log("[" + getCurrentTime() + "] Service Order found in database");
                 cache.add(hashTable.search(id)); // adds to cache
                 logData(true);
