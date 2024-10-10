@@ -19,6 +19,14 @@ public class Cache {
         this.cache = new LinkedList<>();
     }
 
+    public int getSize() {
+        return cache.size();
+    }
+
+    public int getCapacity() {
+        return 30;
+    }
+
     public void add(OS os) {
         int capacity = 30;
         if (cache.size() == capacity) {
