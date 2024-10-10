@@ -31,7 +31,7 @@ public class PriorityQueue implements Iterable<CacheEntry> {
     }
 
     // will also increase the priority of the element
-    private CacheEntry get(int index) {
+    public CacheEntry get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
