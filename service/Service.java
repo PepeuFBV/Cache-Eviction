@@ -17,13 +17,15 @@ public class Service {
     private final Logger logger;
     private final HashTable hashTable;
 
-    public Service() {
-        this.logger = Logger.getInstance();
-        logger.log("\n\nStarting services at " + showDateAndTime());
-        this.cache = new Cache(logger);
-        logger.log("[" + getCurrentTime() + "] Cache created");
-        this.hashTable = new HashTable(logger);
-        logger.log("[" + getCurrentTime() + "] HashTable created");
+    public Service() throws RuntimeException {
+        try {
+            logger = new Logger(Logger.LogOrigin.SERVICE);
+            logger.log("\n\nStarting Services at " + showDateAndTime());
+            this.cache = new Cache();
+            this.hashTable = new HashTable();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public void turnOffIncreaseCapacity() {
