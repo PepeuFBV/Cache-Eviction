@@ -3,6 +3,7 @@ package service.cache;
 import entities.OS;
 
 public class CacheEntry {
+
     private OS os;
     private int priority = 1;
 
@@ -28,6 +29,10 @@ public class CacheEntry {
 
     public void decreasePriority() {
         priority--;
+    }
+
+    public int getId() {
+        return os.getId();
     }
 
     @Override
