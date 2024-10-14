@@ -1,4 +1,4 @@
-package service;
+package service.log;
 
 import java.io.File;
 import java.io.FileWriter;

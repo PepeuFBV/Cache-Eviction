@@ -2,7 +2,7 @@ package service.database;
 
 import entities.OS;
 import exceptions.NonExistentEntryException;
-import service.Logger;
+import service.log.Logger;
 
 import java.util.LinkedList;
 

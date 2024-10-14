@@ -5,6 +5,8 @@ import exceptions.DuplicateEntryException;
 import exceptions.NonExistentEntryException;
 import service.cache.Cache;
 import service.database.HashTable;
+import service.log.Logger;
+
 import java.io.IOException;
 
 // todo: make flag for logging whole database or cache content at every operation

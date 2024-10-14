@@ -1,6 +1,6 @@
 package client;
 
-import service.Logger;
+import service.log.Logger;
 import service.Service;
 
 public class Client {
