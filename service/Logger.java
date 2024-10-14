@@ -40,6 +40,7 @@ public class Logger {
             }
             this.path = path + fileName;
             this.origin = origin;
+            log("Started " + origin.toString());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -57,7 +58,7 @@ public class Logger {
         File logFile = new File(path);
         if (!logFile.exists()) {
             try (FileWriter fileWriter = new FileWriter(logFile)) {
-                log("Log file created at ");
+                log("Log file created at " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
             } catch (IOException e) {
                 throw new IOException("Failed to create log file, check the path and try again.");
             }
