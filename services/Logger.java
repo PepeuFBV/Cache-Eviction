@@ -3,79 +3,83 @@ package services;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Logger {
 
-    private static final String defaultLogPath = "log/log.txt";
-    private static Logger instance;
+    private static boolean fileStarted = false;
+    private String path = "log/log.txt";
+    private Logger instance;
+    private LogOrigin origin = LogOrigin.LOGGER;
 
-    private Logger() {
+    public enum LogOrigin {
+        CACHE,
+        DATABASE,
+        CLIENT,
+        SERVICE,
+        LOGGER
+    }
+
+    public Logger(LogOrigin origin) throws RuntimeException {
         try {
-            createFile();
+            if (!fileStarted) { // start the log file starting message only once (also creates log file if needed)
+                createFile();
+                fileStarted = true;
+            }
+            this.origin = origin;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
-    public static Logger getInstance() {
-        if (instance == null) {
-            instance = new Logger();
+    // fileName must also contain the file extension (e.g. ".txt")
+    public Logger(LogOrigin origin, String path, String fileName) throws RuntimeException {
+        try {
+            if (!fileStarted) { // start the log file starting message only once (also creates log file if needed)
+                createFile();
+                fileStarted = true;
+            }
+            this.path = path + fileName;
+            this.origin = origin;
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
-        return instance;
     }
 
-    private String getCurrentTime() {
-        return java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+    private static String getCurrentTime() {
+        return "(" + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) + ")";
+    }
+
+    private String getCurrentOrigin() {
+        return "[" + origin + "]";
     }
 
     private void createFile() throws IOException {
-        File logFile = new File(defaultLogPath);
+        File logFile = new File(path);
         if (!logFile.exists()) {
             try (FileWriter fileWriter = new FileWriter(logFile)) {
-                fileWriter.write("Log file created at " + java.time.LocalDateTime.now());
-                System.out.println("Log file created: " + logFile.getAbsolutePath());
+                log("Log file created at ");
             } catch (IOException e) {
                 throw new IOException("Failed to create log file, check the path and try again.");
             }
         }
     }
 
-    /*private void createTreeFile() throws IOException {
-        File treeFile = new File(defaultTreeLogPath);
-        System.out.println("Creating a new tree file...");
-        try (FileWriter fileWriter = new FileWriter(treeFile)) {
-            fileWriter.write("Tree file created at " + java.time.LocalDateTime.now());
-            System.out.println("Tree file created: " + treeFile.getAbsolutePath());
+    public void log(String message) throws RuntimeException {
+        try (FileWriter fileWriter = new FileWriter(path, true)) {
+            fileWriter.write("\n" + getCurrentTime() + " " + getCurrentOrigin() + " " + message);
         } catch (IOException e) {
-            throw new IOException("Failed to create tree file, check the path and try again.");
-        }
-    }*/
-
-    public void log(String message) {
-        try (FileWriter fileWriter = new FileWriter(defaultLogPath, true)) {
-            fileWriter.write("\n" + message);
-        } catch (IOException e) {
-            System.out.println("Failed to write to log file");
+            throw new RuntimeException("Failed to log message, check the path and try again.");
         }
     }
 
-    public String clearLog() throws IOException {
-        System.out.println("Are you sure you want to clear the log? (y/n)");
-        log("[" + getCurrentTime() + "] Log clearing requested");
-        Scanner scanner = new Scanner(System.in);
-        String answer = scanner.nextLine();
-        if (answer.equals("y")) {
-            try (FileWriter fileWriter = new FileWriter(defaultLogPath)) {
-                fileWriter.write("Log file created at " + java.time.LocalDateTime.now());
-            }
+    public void clearLog() throws IOException {
+        try (FileWriter fileWriter = new FileWriter(path)) {
+            fileWriter.write("Log file created at " + java.time.LocalDateTime.now());
             log(""); // log method is bugged on the first line
-            log("\n\nStarting services at " + java.time.LocalDateTime.now());
+            log("\nStarting services at " + java.time.LocalDateTime.now()); // extra \n to separate the log
             log("[" + getCurrentTime() + "] Log cleared");
-            return "Log cleared\n";
-        } else {
-            log("[" + getCurrentTime() + "] Log clearing canceled");
-            return "Operation canceled\n";
+        } catch (IOException e) {
+            throw new IOException("Failed to clear log file, check the path and try again.");
         }
     }
 
