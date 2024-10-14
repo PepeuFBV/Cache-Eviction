@@ -24,15 +24,31 @@ public class Cache {
     }
 
     public void add(OS os) {
-        logger.log("Adding a new element to cache with ID " + os.getId());
-        int capacity = 30;
-        if (cache.size() == capacity) {
-            logger.log("Cache is full");
-            cache.remove(); // remove the last element from cache (lowest priority)
-            logger.log("Removed the first element from cache");
+        OS found = search(os.getId());
+        if (found != null) { // if the element is already in the cache, don't add it again, just update its priority
+            logger.log("Element already in cache");
+            increasePriority(os.getId());
+        } else {
+            logger.log("Adding a new element to cache with ID " + os.getId());
+            int capacity = 30;
+            if (cache.size() == capacity) {
+                logger.log("Cache is full");
+                cache.remove(); // remove the last element from cache (lowest priority)
+                logger.log("Removed the last element from cache");
+            }
+            cache.insert(new CacheEntry(os));
+            logger.log("Added the new element to cache");
         }
-        cache.insert(new CacheEntry(os));
-        logger.log("Added the new element to cache");
+    }
+
+    private void increasePriority(int id) {
+        for (CacheEntry cacheEntry : cache) {
+            if (cacheEntry.getOs().getId() == id) {
+                cacheEntry.increasePriority();
+                logger.log("Increased priority of element in cache with ID " + id);
+                return;
+            }
+        }
     }
 
     public boolean isInCache(OS os) {
