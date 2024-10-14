@@ -16,7 +16,7 @@ public class Client {
     private Map<String, String> dictionary;
 
     // starts class and services
-    public Client() throws RuntimeException {
+    public Client(Service service) throws RuntimeException {
         try {
             logger = new Logger(Logger.LogOrigin.CLIENT);
         } catch (RuntimeException e) {

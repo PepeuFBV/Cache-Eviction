@@ -1,9 +1,11 @@
 import client.Client;
+import service.Service;
 
 public class Main {
 
     public static void main(String[] args) {
-        Client client = new Client();
+        Service service = new Service();
+        Client client = new Client(service);
         client.startServices();
     }
 
