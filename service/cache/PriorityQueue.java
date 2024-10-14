@@ -26,10 +26,21 @@ public class PriorityQueue implements Iterable<CacheEntry> {
 
         if (first == null) {
             first = newNode;
+            last = newNode;
+        } else if (first.entry.getPriority() < entry.getPriority()) {
+            newNode.next = first;
+            first = newNode;
         } else {
-            last.next = newNode;
+            Node current = first;
+            while (current.next != null && current.next.entry.getPriority() >= entry.getPriority()) {
+                current = current.next;
+            }
+            newNode.next = current.next;
+            current.next = newNode;
+            if (newNode.next == null) {
+                last = newNode;
+            }
         }
-        last = newNode;
         size++;
     }
 
