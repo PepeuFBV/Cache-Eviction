@@ -1,27 +1,26 @@
-package service.cache;
+package structures;
 
 import exceptions.NonExistentEntryException;
 
 import java.util.Iterator;
 
 // priority heap
-public class PriorityQueue implements Iterable<CacheEntry> {
+public class PriorityQueue<T extends PriorityQueueEntry> implements Iterable<T> {
 
     private Node first = null;
     private Node last = null;
     private int size = 0;
 
-    private static class Node {
-        CacheEntry entry;
+    private class Node {
+        T entry;
         Node next;
 
-        public Node(CacheEntry entry) {
+        public Node(T entry) {
             this.entry = entry;
         }
-
     }
 
-    public void insert(CacheEntry entry) {
+    public void insert(T entry) {
         Node newNode = new Node(entry);
 
         if (first == null) {
@@ -44,8 +43,7 @@ public class PriorityQueue implements Iterable<CacheEntry> {
         size++;
     }
 
-    // will also increase the priority of the element
-    public CacheEntry get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
@@ -71,13 +69,12 @@ public class PriorityQueue implements Iterable<CacheEntry> {
         return current.entry;
     }
 
-    // removes the last element from the heap (lowest priority)
     public void remove() {
-        if (size() == 1 || first == null) { // if there's only one element or none
+        if (size() == 1 || first == null) {
             first = null;
             last = null;
             size = 0;
-        } else { // more than one element
+        } else {
             Node current = first;
             while (current.next != last) {
                 current = current.next;
@@ -88,15 +85,14 @@ public class PriorityQueue implements Iterable<CacheEntry> {
         }
     }
 
-    // method only for using when explicitly removing an element from the heap
     public void remove(int id) throws NonExistentEntryException {
-        if (first == null) { // if there's no element
+        if (first == null) {
             throw new NonExistentEntryException("Element not found in cache");
         }
 
-        if (first.entry.getId() == id) { // if the element to remove is the first one
+        if (first.entry.getId() == id) {
             first = first.next;
-            if (first == null) { // if it was the only element
+            if (first == null) {
                 last = null;
             }
             size--;
@@ -108,12 +104,12 @@ public class PriorityQueue implements Iterable<CacheEntry> {
             current = current.next;
         }
 
-        if (current.next == null) { // if the element was not found
+        if (current.next == null) {
             throw new NonExistentEntryException("Element not found in cache");
         }
 
         current.next = current.next.next;
-        if (current.next == null) { // if the removed element was the last one
+        if (current.next == null) {
             last = current;
         }
         size--;
@@ -134,8 +130,8 @@ public class PriorityQueue implements Iterable<CacheEntry> {
     }
 
     @Override
-    public Iterator<CacheEntry> iterator() {
-        return new Iterator<CacheEntry>() {
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
             private Node current = first;
 
             @Override
@@ -144,12 +140,11 @@ public class PriorityQueue implements Iterable<CacheEntry> {
             }
 
             @Override
-            public CacheEntry next() {
-                CacheEntry entry = current.entry;
+            public T next() {
+                T entry = current.entry;
                 current = current.next;
                 return entry;
             }
         };
     }
-
 }

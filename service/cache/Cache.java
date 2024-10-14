@@ -3,16 +3,17 @@ package service.cache;
 import entities.OS;
 import exceptions.NonExistentEntryException;
 import service.log.Logger;
+import structures.PriorityQueue;
 
 // capacity: 30
 public class Cache {
 
     private final Logger logger;
-    private final PriorityQueue cache;
+    private final PriorityQueue<CacheEntry> cache;
 
     public Cache() {
         this.logger = new Logger(Logger.LogOrigin.CACHE);
-        this.cache = new PriorityQueue();
+        this.cache = new PriorityQueue<>();
     }
 
     public int getSize() {

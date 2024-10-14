@@ -1,10 +1,13 @@
 package service.cache;
 
 import entities.OS;
+import structures.PriorityQueueEntry;
 
-public class CacheEntry {
+import java.util.Iterator;
 
-    private OS os;
+public class CacheEntry extends PriorityQueueEntry {
+
+    private final OS os;
     private int priority = 1;
 
     public CacheEntry(OS os) {
@@ -15,10 +18,12 @@ public class CacheEntry {
         return os;
     }
 
+    @Override
     public int getPriority() {
         return priority;
     }
 
+    @Override
     public void increasePriority() {
         priority++;
     }
@@ -31,14 +36,14 @@ public class CacheEntry {
         priority--;
     }
 
+    @Override
     public int getId() {
         return os.getId();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof CacheEntry) {
-            CacheEntry other = (CacheEntry) obj;
+        if (obj instanceof CacheEntry other) {
             return os.equals(other.os);
         }
         return false;
@@ -46,6 +51,25 @@ public class CacheEntry {
 
     public boolean equals(OS os) {
         return this.os.equals(os);
+    }
+
+    @Override
+    public Iterator<PriorityQueueEntry> iterator() {
+        return new Iterator<PriorityQueueEntry>() {
+            private CacheEntry current = CacheEntry.this;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public PriorityQueueEntry next() {
+                CacheEntry entry = current;
+                current = null;
+                return entry;
+            }
+        };
     }
 
     @Override
