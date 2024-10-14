@@ -1,8 +1,8 @@
-package services.database;
+package service.database;
 
 import entities.OS;
 import exceptions.NonExistentEntryException;
-import services.Logger;
+import service.Logger;
 
 import java.util.LinkedList;
 

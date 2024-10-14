@@ -1,4 +1,4 @@
-package services.cache;
+package service.cache;
 
 import exceptions.NonExistentEntryException;
 

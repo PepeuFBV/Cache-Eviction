@@ -1,8 +1,8 @@
-package services.cache;
+package service.cache;
 
 import entities.OS;
 import exceptions.NonExistentEntryException;
-import services.Logger;
+import service.Logger;
 
 // capacity: 30
 public class Cache {

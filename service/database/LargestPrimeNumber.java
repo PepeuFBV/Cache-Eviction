@@ -1,4 +1,4 @@
-package services.database;
+package service.database;
 
 // finds the largest prime number below a given number
 public class LargestPrimeNumber {

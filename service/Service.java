@@ -1,10 +1,10 @@
-package services;
+package service;
 
 import entities.OS;
 import exceptions.DuplicateEntryException;
 import exceptions.NonExistentEntryException;
-import services.cache.Cache;
-import services.database.HashTable;
+import service.cache.Cache;
+import service.database.HashTable;
 import java.io.IOException;
 
 public class Service {
