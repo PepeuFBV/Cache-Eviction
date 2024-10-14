@@ -1,5 +1,6 @@
 package service;
 
+import compression.Compressor;
 import entities.OS;
 import exceptions.DuplicateEntryException;
 import exceptions.NonExistentEntryException;
@@ -8,6 +9,7 @@ import service.database.HashTable;
 import service.log.Logger;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 // todo: make flag for logging whole database or cache content at every operation
 // todo: test all methods
@@ -17,6 +19,8 @@ public class Service {
     private final Cache cache;
     private final Logger logger;
     private final HashTable hashTable;
+    private Compressor compressor;
+    private HashMap<String, String> dictionary;
 
     public Service() throws RuntimeException {
         try {
@@ -28,12 +32,9 @@ public class Service {
         }
     }
 
-    public void sendMessage(String message) {
-        // todo: implement message sending
-    }
-
     public boolean receiveMessage(String message) {
-        // todo: implement message receiving, parsing and handling
+        String decompressedMessage = compressor.decompress(message, dictionary);
+        System.out.println("Service received message: " + decompressedMessage);
         return true;
     }
 

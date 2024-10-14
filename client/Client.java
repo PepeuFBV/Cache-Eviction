@@ -2,14 +2,18 @@ package client;
 
 import service.log.Logger;
 import service.Service;
-
+import compression.Compressor;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Client {
 
     private Logger logger;
     private Service service;
+    private Compressor compressor;
+    private Map<String, String> dictionary;
 
     // starts class and services
     public Client() throws RuntimeException {
@@ -20,6 +24,8 @@ public class Client {
         }
         try {
             service = new Service();
+            compressor = new Compressor(""); // initialize compressor with empty pattern string
+            dictionary = new HashMap<>();
         } catch (RuntimeException e) {
             // todo: implement exception handling
         }
@@ -48,7 +54,7 @@ public class Client {
         } catch (Exception e) {
             throw new IOException("Invalid option");
         }
-        return option; // Add this line
+        return option;
     }
 
     private void pickOption(int option) throws IOException { // Change method signature
@@ -88,12 +94,9 @@ public class Client {
     }
 
     private void sendMessage(String message) {
-        // todo: implement message sending, coding the message to be sent
-    }
-
-    private boolean receiveMessage(String message) {
-        // todo: implement message receiving, decoding the message received
-        return true;
+        String compressedMessage = compressor.compress(message);
+        service.receiveMessage(compressedMessage);
+        System.out.println("Client sent message: " + compressedMessage);
     }
 
     private void showOptions() {

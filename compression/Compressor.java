@@ -3,11 +3,11 @@ package compression;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Compresser {
+public class Compressor {
 
     private final KMP kmp;
 
-    public Compresser(String pattern) {
+    public Compressor(String pattern) {
         kmp = new KMP(pattern);
     }
 
@@ -44,5 +44,5 @@ public class Compresser {
 
         return response.toString();
     }
-    
+
 }
