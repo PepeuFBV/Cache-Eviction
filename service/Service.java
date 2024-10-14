@@ -28,6 +28,10 @@ public class Service {
         }
     }
 
+    public void sendMessage(String message) {
+        // todo: implement message sending
+    }
+
     public boolean receiveMessage(String message) {
         // todo: implement message receiving, parsing and handling
         return true;

@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Client {
 
-    private final Logger logger;
+    private Logger logger;
     private Service service;
 
     // starts class and services
@@ -89,6 +89,11 @@ public class Client {
 
     private void sendMessage(String message) {
         // todo: implement message sending, coding the message to be sent
+    }
+
+    private boolean receiveMessage(String message) {
+        // todo: implement message receiving, decoding the message received
+        return true;
     }
 
     private void showOptions() {

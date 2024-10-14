@@ -1,7 +1,4 @@
 import client.Client;
-import service.Service;
-import java.util.Scanner;
-import entities.OS;
 
 public class Main {
 
