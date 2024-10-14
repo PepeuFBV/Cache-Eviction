@@ -14,7 +14,7 @@ public class HashTable {
     private boolean mayIncreaseCapacity = true;
     private int threshold; // percentage of the table that can be filled before increasing capacity (default is 250%)
     private LinkedList<OS>[] table;
-    private Logger logger;
+    private final Logger logger;
 
     @SuppressWarnings("unchecked")
     public HashTable() {
