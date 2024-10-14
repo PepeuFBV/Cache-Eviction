@@ -93,6 +93,14 @@ public class Cache {
         return cache.isEmpty();
     }
 
+    public void logContent() throws RuntimeException {
+        try {
+            logger.log(toString());
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

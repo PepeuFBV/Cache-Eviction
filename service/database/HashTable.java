@@ -153,6 +153,14 @@ public class HashTable {
         throw new NonExistentEntryException("Service Order ID " + key + " not found in database");
     }
 
+    public void logContent() throws RuntimeException {
+        try {
+            logger.log(toString());
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
