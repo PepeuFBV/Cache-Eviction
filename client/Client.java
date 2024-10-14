@@ -1,11 +1,8 @@
 package client;
 
-import service.log.Logger;
-import service.Service;
 import compression.Compressor;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import service.Service;
+import service.log.Logger;
 import java.util.Scanner;
 
 public class Client {
@@ -13,17 +10,15 @@ public class Client {
     private Logger logger;
     private Service service;
     private Compressor compressor;
-    private Map<String, String> dictionary;
 
-    // starts class and services
     public Client(Service service) throws RuntimeException {
         try {
             logger = new Logger(Logger.LogOrigin.CLIENT);
-            compressor = new Compressor(""); // initialize compressor with empty pattern string
-            dictionary = new HashMap<>();
+            compressor = new Compressor(); // inicializar compressor
             this.service = service;
         } catch (RuntimeException e) {
-            // todo: implement exception handling
+            System.out.println(e.getMessage());
+            // todo: exception handling
         }
     }
 
@@ -33,12 +28,8 @@ public class Client {
             int option = 0;
             while (option != 8) {
                 option = getOption();
-                try {
-                    String message = pickOption(option);
-                    sendMessage(message);
-                } catch (IOException e) {
-                    // todo: implement exception handling
-                }
+                String message = pickOption(option);
+                sendMessage(message);
             }
             System.out.println("Are you sure you want to exit? (y/n)");
             Scanner scanner = new Scanner(System.in);
@@ -52,12 +43,12 @@ public class Client {
     private void sendMessage(String message) {
         String compressedMessage = compressor.compress(message);
         service.receiveMessage(compressedMessage);
-        System.out.println("Client sent message: " + compressedMessage);
+        System.out.println("Client sent compressed message: " + compressedMessage);
     }
 
     private int getOption() {
         showOptions();
-        System.out.println("--> ");
+        System.out.print("--> ");
         Scanner scanner = new Scanner(System.in);
         int option = 0;
         try {
@@ -72,8 +63,8 @@ public class Client {
         return option;
     }
 
-    private String pickOption(int option) { // Change method signature
-        return switch (option) { // Use the parameter instead of calling getOption
+    private String pickOption(int option) {
+        return switch (option) {
             case 1 -> {
                 System.out.println("Creating a new Service Order...");
                 yield "CREATE SERVICE ORDER";

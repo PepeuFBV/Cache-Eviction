@@ -7,7 +7,6 @@ import exceptions.NonExistentEntryException;
 import service.cache.Cache;
 import service.database.HashTable;
 import service.log.Logger;
-
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -19,23 +18,23 @@ public class Service {
     private final Cache cache;
     private final Logger logger;
     private final HashTable hashTable;
-    private Compressor compressor;
+    private final Compressor compressor;
     private HashMap<String, String> dictionary;
 
-    public Service() throws RuntimeException {
+    public Service() {
         try {
             logger = new Logger(Logger.LogOrigin.SERVICE);
-            this.cache = new Cache();
-            this.hashTable = new HashTable();
+            cache = new Cache();
+            hashTable = new HashTable();
+            compressor = new Compressor();
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    public boolean receiveMessage(String message) {
-        String decompressedMessage = compressor.decompress(message, dictionary);
-        System.out.println("Service received message: " + decompressedMessage);
-        return true;
+    public void receiveMessage(String compressedMessage) {
+        String decompressedMessage = compressor.decompress(compressedMessage);
+        System.out.println("Service received decompressed message: " + decompressedMessage);
     }
 
     private void turnOffDatabaseIncreaseCapacity() {

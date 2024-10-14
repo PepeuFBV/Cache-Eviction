@@ -8,7 +8,6 @@ public class Logger {
 
     private static boolean fileStarted = false;
     private String path = "log/log.txt";
-    private Logger instance;
     private LogOrigin origin = LogOrigin.LOGGER;
 
     public enum LogOrigin {

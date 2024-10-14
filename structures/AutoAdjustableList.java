@@ -1,4 +1,4 @@
-package service.database;
+package structures;
 
 import java.util.Arrays;
 

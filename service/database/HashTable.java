@@ -3,6 +3,7 @@ package service.database;
 import entities.OS;
 import exceptions.NonExistentEntryException;
 import service.log.Logger;
+import structures.AutoAdjustableList;
 
 public class HashTable {
 
