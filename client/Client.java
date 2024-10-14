@@ -14,7 +14,7 @@ public class Client {
     public Client(Service service) throws RuntimeException {
         try {
             logger = new Logger(Logger.LogOrigin.CLIENT);
-            compressor = new Compressor(); // inicializar compressor
+            compressor = new Compressor();
             this.service = service;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
