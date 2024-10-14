@@ -28,19 +28,24 @@ public class Service {
         }
     }
 
-    public void turnOffDatabaseIncreaseCapacity() {
+    public boolean receiveMessage(String message) {
+        // todo: implement message receiving, parsing and handling
+        return true;
+    }
+
+    private void turnOffDatabaseIncreaseCapacity() {
         hashTable.setMayIncreaseCapacity(false);
     }
 
-    public void turnOnDatabaseIncreaseCapacity() {
+    private void turnOnDatabaseIncreaseCapacity() {
         hashTable.setMayIncreaseCapacity(true);
     }
 
-    public void stopServices() {
+    private void stopServices() {
         logger.log("Stopping services at " + showDateAndTime());
     }
 
-    public void addNewServiceOrder(OS os) throws DuplicateEntryException {
+    private void addNewServiceOrder(OS os) throws DuplicateEntryException {
         logger.log("Creating new Service Order");
         if (isInCache(os)) { // check if service order already exists in cache
             logger.log("Service Order already exists in cache");
@@ -56,7 +61,7 @@ public class Service {
         }
     }
 
-    public void clearLog() throws RuntimeException {
+    private void clearLog() throws RuntimeException {
         try {
             logger.clearLog();
         } catch (IOException e) {
@@ -64,7 +69,7 @@ public class Service {
         }
     }
 
-    public boolean seeAllServiceOrders() throws RuntimeException {
+    private boolean seeAllServiceOrders() throws RuntimeException {
         logger.log("Listing all Service Orders");
         if (cache.isEmpty() || hashTable.isEmpty()) { // checks for faster answer if cache is empty
             if (hashTable.isEmpty()) {
@@ -76,7 +81,7 @@ public class Service {
         return true;
     }
 
-    public boolean seeCache() {
+    private boolean seeCache() {
         logger.log("Listing all Service Orders in the cache");
         if (cache.isEmpty()) {
             cache.log("Cache is empty");
@@ -86,7 +91,7 @@ public class Service {
         return true;
     }
 
-    public OS searchServiceOrder(int id) {
+    private OS searchServiceOrder(int id) {
         logger.log("Searching for Service Order with ID " + id);
         if (hashTable.isEmpty()) {
             hashTable.log("Database is empty, can't search for Service Order");
@@ -106,7 +111,7 @@ public class Service {
         return null;
     }
 
-    public void removeServiceOrder(int id) throws NonExistentEntryException {
+    private void removeServiceOrder(int id) throws NonExistentEntryException {
         if (hashTable.isEmpty()) {
             logger.log("Database is empty, can't remove Service Order");
             throw new NonExistentEntryException("Database is empty, can't remove Service Order");
@@ -131,7 +136,7 @@ public class Service {
         throw new NonExistentEntryException("Service Order ID " + id + " not found in database");
     }
 
-    public void alterServiceOrder(int id, OS newServiceOrder) throws NonExistentEntryException {
+    private void alterServiceOrder(int id, OS newServiceOrder) throws NonExistentEntryException {
         logger.log("Altering Service Order with ID " + id);
 
         OS serviceOrder = hashTable.search(id);
