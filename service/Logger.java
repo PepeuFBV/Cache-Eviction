@@ -26,6 +26,7 @@ public class Logger {
                 fileStarted = true;
             }
             this.origin = origin;
+            log("Started " + origin.toString());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
