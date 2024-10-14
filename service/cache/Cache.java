@@ -101,6 +101,14 @@ public class Cache {
         }
     }
 
+    public void log(String message) throws RuntimeException {
+        try {
+            logger.log(message);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
