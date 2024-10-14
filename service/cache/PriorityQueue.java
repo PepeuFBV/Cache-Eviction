@@ -18,6 +18,7 @@ public class PriorityQueue implements Iterable<CacheEntry> {
         public Node(CacheEntry entry) {
             this.entry = entry;
         }
+
     }
 
     public void insert(CacheEntry entry) {
@@ -78,21 +79,33 @@ public class PriorityQueue implements Iterable<CacheEntry> {
 
     // method only for using when explicitly removing an element from the heap
     public void remove(int id) throws NonExistentEntryException {
-        if (size() == 1 || first == null) { // if there's only one element or none
-            first = null;
-            last = null;
-            size = 0;
-        } else { // more than one element
-            Node current = first;
-            while (current.next != last) {
-                current = current.next;
+        if (first == null) { // if there's no element
+            throw new NonExistentEntryException("Element not found in cache");
+        }
+
+        if (first.entry.getId() == id) { // if the element to remove is the first one
+            first = first.next;
+            if (first == null) { // if it was the only element
+                last = null;
             }
-            current.next = null;
-            last = current;
             size--;
             return;
         }
-        throw new NonExistentEntryException("Element not found in cache");
+
+        Node current = first;
+        while (current.next != null && current.next.entry.getId() != id) {
+            current = current.next;
+        }
+
+        if (current.next == null) { // if the element was not found
+            throw new NonExistentEntryException("Element not found in cache");
+        }
+
+        current.next = current.next.next;
+        if (current.next == null) { // if the removed element was the last one
+            last = current;
+        }
+        size--;
     }
 
     public void clear() {
