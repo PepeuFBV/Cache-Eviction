@@ -19,77 +19,33 @@ public class Client {
     public Client(Service service) throws RuntimeException {
         try {
             logger = new Logger(Logger.LogOrigin.CLIENT);
-        } catch (RuntimeException e) {
-            // todo: implement exception handling
-        }
-        try {
-            service = new Service();
             compressor = new Compressor(""); // initialize compressor with empty pattern string
             dictionary = new HashMap<>();
+            this.service = service;
         } catch (RuntimeException e) {
             // todo: implement exception handling
         }
     }
 
     public void startServices() {
-        try {
+        boolean exit = false;
+        while (!exit) {
             int option = 0;
             while (option != 8) {
                 option = getOption();
+                try {
+                    String message = pickOption(option);
+                    sendMessage(message);
+                } catch (IOException e) {
+                    // todo: implement exception handling
+                }
             }
-        } catch (IOException e) {
-            // todo: implement exception handling
-        }
-    }
-
-    private int getOption() throws IOException {
-        showOptions();
-        Scanner scanner = new Scanner(System.in);
-        int option = 0;
-        try {
-            option = scanner.nextInt();
-            if (option < 1 || option > 8) {
-                throw new IOException("Invalid option");
+            System.out.println("Are you sure you want to exit? (y/n)");
+            Scanner scanner = new Scanner(System.in);
+            String answer = scanner.nextLine();
+            if (answer.equals("y")) {
+                exit = true;
             }
-        } catch (Exception e) {
-            throw new IOException("Invalid option");
-        }
-        return option;
-    }
-
-    private void pickOption(int option) throws IOException { // Change method signature
-        switch (option) { // Use the parameter instead of calling getOption
-            case 1:
-                System.out.println("Creating a new Service Order...");
-                sendMessage("CREATE SERVICE ORDER");
-                break;
-            case 2:
-                System.out.println("Searching for a Service Order...");
-                sendMessage("SEARCH SERVICE ORDER");
-                break;
-            case 3:
-                System.out.println("Listing all Service Orders...");
-                sendMessage("SEE ALL SERVICE ORDERS");
-                break;
-            case 4:
-                System.out.println("Altering a Service Order...");
-                sendMessage("ALTER SERVICE ORDER");
-                break;
-            case 5:
-                System.out.println("Seeing the cache...");
-                sendMessage("SEE CACHE");
-                break;
-            case 6:
-                System.out.println("Removing a Service Order...");
-                sendMessage("REMOVE SERVICE ORDER");
-                break;
-            case 7:
-                System.out.println("Clearing the log...");
-                sendMessage("CLEAR LOG");
-                break;
-            default:
-                System.out.println("Invalid option. Try again");
-                throw new IOException("Invalid option");
         }
     }
 
@@ -97,6 +53,57 @@ public class Client {
         String compressedMessage = compressor.compress(message);
         service.receiveMessage(compressedMessage);
         System.out.println("Client sent message: " + compressedMessage);
+    }
+
+    private int getOption() {
+        showOptions();
+        System.out.println("--> ");
+        Scanner scanner = new Scanner(System.in);
+        int option = 0;
+        try {
+            option = scanner.nextInt();
+            if (option < 1 || option > 8) {
+                System.out.println("Invalid option. Try again\n");
+            }
+            return option;
+        } catch (Exception e) {
+            System.out.println("Invalid option. Try again\n");
+        }
+        return option;
+    }
+
+    private String pickOption(int option) { // Change method signature
+        return switch (option) { // Use the parameter instead of calling getOption
+            case 1 -> {
+                System.out.println("Creating a new Service Order...");
+                yield "CREATE SERVICE ORDER";
+            }
+            case 2 -> {
+                System.out.println("Searching for a Service Order...");
+                yield "SEARCH SERVICE ORDER";
+            }
+            case 3 -> {
+                System.out.println("Listing all Service Orders...");
+                yield "LIST SERVICE ORDERS";
+            }
+            case 4 -> {
+                System.out.println("Altering a Service Order...");
+                yield "ALTER SERVICE ORDER";
+            }
+            case 5 -> {
+                System.out.println("Seeing the cache...");
+                yield "SEE CACHE";
+            }
+            case 6 -> {
+                System.out.println("Removing a Service Order...");
+                yield "REMOVE SERVICE ORDER";
+            }
+            case 7 -> {
+                System.out.println("Clearing the log...");
+                yield "CLEAR LOG";
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + option);
+        };
     }
 
     private void showOptions() {
