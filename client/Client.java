@@ -45,7 +45,6 @@ public class Client {
     // change to private
     public void sendMessage(String message) {
         String compressedMessage = compressor.compress(message);
-        System.out.println("Client sent compressed message: " + compressedMessage);
         service.receiveMessage(compressedMessage);
     }
 

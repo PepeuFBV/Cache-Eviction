@@ -34,7 +34,7 @@ public class Service {
 
     public void receiveMessage(String compressedMessage) {
         String decompressedMessage = compressor.decompress(compressedMessage);
-        System.out.println("Service received decompressed message: " + decompressedMessage);
+        // todo: switch case for method calling
     }
 
     private void turnOffDatabaseIncreaseCapacity() {
