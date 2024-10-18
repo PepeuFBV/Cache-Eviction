@@ -61,6 +61,10 @@ public class Compressor {
     }
 
     public String decompress(String compressedText) {
+        if (root == null) {
+            throw new IllegalStateException("Huffman tree is not built");
+        }
+
         StringBuilder result = new StringBuilder();
         HuffmanNode currentNode = root;
 
