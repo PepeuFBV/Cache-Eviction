@@ -44,8 +44,7 @@ public class Client {
 
     // change to private
     public void sendMessage(String message) {
-        String compressedMessage = compressor.compress(message);
-        service.receiveMessage(compressedMessage);
+        service.receiveMessage(compressor.compress(message));
     }
 
     private int getOption() {
@@ -68,31 +67,55 @@ public class Client {
     private String pickOption(int option) {
         return switch (option) {
             case 1 -> {
-                System.out.println("Creating a new Service Order...");
-                yield "CREATE SERVICE ORDER";
+                logger.log("Creating a new Service Order");
+                System.out.println("Enter the data for the new Service Order");
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Name: ");
+                String name = scanner.nextLine();
+                System.out.println("Description: ");
+                String description = scanner.nextLine();
+                yield "CREATE " + name + "," + description;
             }
             case 2 -> {
-                System.out.println("Searching for a Service Order...");
-                yield "SEARCH SERVICE ORDER";
+                logger.log("Searching for a Service Order");
+                System.out.println("Enter the ID of the Service Order");
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("ID: ");
+                int id = scanner.nextInt();
+                yield "SEARCH " + id;
             }
             case 3 -> {
-                System.out.println("Listing all Service Orders...");
-                yield "LIST SERVICE ORDERS";
+                logger.log("Listing all Service Orders");
+                yield "LIST DATABASE";
             }
             case 4 -> {
-                System.out.println("Altering a Service Order...");
-                yield "ALTER SERVICE ORDER";
+                logger.log("Altering a Service Order");
+                System.out.println("Enter the ID of the Service Order");
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("ID: ");
+                int id = scanner.nextInt();
+                scanner.nextLine(); // consume the newline
+                System.out.println("Enter the new data for the Service Order");
+                System.out.println("Name: ");
+                String name = scanner.nextLine();
+                System.out.println("Description: ");
+                String description = scanner.nextLine();
+                yield "ALTER " + id + "," + name + "," + description;
             }
             case 5 -> {
-                System.out.println("Seeing the cache...");
-                yield "SEE CACHE";
+                logger.log("Seeing the cache");
+                yield "LIST CACHE";
             }
             case 6 -> {
-                System.out.println("Removing a Service Order...");
-                yield "REMOVE SERVICE ORDER";
+                logger.log("Removing a Service Order");
+                System.out.println("Enter the ID of the Service Order");
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("ID: ");
+                int id = scanner.nextInt();
+                yield "REMOVE " + id;
             }
             case 7 -> {
-                System.out.println("Clearing the log...");
+                logger.log("Clearing the log");
                 yield "CLEAR LOG";
             }
             default -> throw new IllegalStateException("Unexpected value: " + option);

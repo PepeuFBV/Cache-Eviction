@@ -8,6 +8,7 @@ import service.cache.Cache;
 import service.database.HashTable;
 import service.log.Logger;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 // todo: make flag for logging whole database or cache content at every operation
@@ -32,9 +33,61 @@ public class Service {
         }
     }
 
-    public void receiveMessage(String compressedMessage) {
-        String decompressedMessage = compressor.decompress(compressedMessage);
-        // todo: switch case for method calling
+    public void receiveMessage(String compressedMessage) throws RuntimeException {
+        String message = compressor.decompress(compressedMessage);
+        String[] parts = message.split(" "); // message format:
+        String command = parts[0];
+        logger.log("Received message: " + message);
+
+        try {
+            switch (command) {
+                case "CREATE":
+                    String[] creating = parts[1].split(",");
+                    OS newServiceOrder = new OS(creating[0], creating[1], LocalDateTime.now()); // Adjust as necessary
+                    addNewServiceOrder(newServiceOrder);
+                    break;
+                case "SEARCH":
+                    int searchId = Integer.parseInt(parts[1]);
+                    OS foundOrder = searchServiceOrder(searchId);
+                    if (foundOrder != null) {
+                        logger.log("Service Order found: " + foundOrder.toString());
+                    } else {
+                        logger.log("Service Order not found");
+                    }
+                    break;
+                case "ALTER":
+                    String[] altering = parts[1].split(",");
+                    OS alteredOrder = new OS(altering[1], altering[2], LocalDateTime.now()); // Adjust as necessary
+                    alterServiceOrder(Integer.parseInt(altering[1]), alteredOrder);
+                    break;
+                case "LIST":
+                    if (parts[1].equals("CACHE")) {
+                        seeCache();
+                    } else if (parts[1].equals("DATABASE")) {
+                        seeAllServiceOrders();
+                    } else {
+                        throw new RuntimeException("Invalid command");
+                    }
+                    break;
+                case "REMOVE":
+                    int removeId = Integer.parseInt(parts[1]);
+                    removeServiceOrder(removeId);
+                    break;
+                case "CLEAR":
+                    if (parts[1].equals("LOG")) {
+                        clearLog();
+                    } else {
+                        throw new RuntimeException("Invalid command");
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected message: " + command);
+            }
+        } catch (DuplicateEntryException | NonExistentEntryException e) {
+            logger.log("Error processing message: " + message + " - " + e.getMessage());
+        } catch (RuntimeException e) {
+            logger.log("Error processing message: " + message);
+        }
     }
 
     private void turnOffDatabaseIncreaseCapacity() {

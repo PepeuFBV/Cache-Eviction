@@ -8,8 +8,7 @@ public class Main {
         Compressor compressor = new Compressor();
         Service service = new Service(compressor);
         Client client = new Client(service, compressor);
-        // client.startServices();
-        client.sendMessage("Testing message sending right now");
+        client.startServices();
     }
 
 }
