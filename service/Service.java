@@ -102,6 +102,7 @@ public class Service {
         logger.log("Stopping services at " + showDateAndTime());
     }
 
+    // client calling this method
     private void addNewServiceOrder(OS os) throws DuplicateEntryException {
         logger.log("Creating new Service Order");
         if (isInCache(os)) { // check if service order already exists in cache
@@ -118,6 +119,7 @@ public class Service {
         }
     }
 
+    // client calling this method
     private void clearLog() throws RuntimeException {
         try {
             logger.clearLog();
@@ -126,6 +128,7 @@ public class Service {
         }
     }
 
+    // client calling this method
     private boolean seeAllServiceOrders() throws RuntimeException {
         logger.log("Listing all Service Orders");
         if (cache.isEmpty() || hashTable.isEmpty()) { // checks for faster answer if cache is empty
@@ -138,6 +141,7 @@ public class Service {
         return true;
     }
 
+    // client calling this method
     private boolean seeCache() {
         logger.log("Listing all Service Orders in the cache");
         if (cache.isEmpty()) {
@@ -148,6 +152,7 @@ public class Service {
         return true;
     }
 
+    // client calling this method
     private OS searchServiceOrder(int id) {
         logger.log("Searching for Service Order with ID " + id);
         if (hashTable.isEmpty()) {
@@ -168,6 +173,7 @@ public class Service {
         return null;
     }
 
+    // client calling this method
     private void removeServiceOrder(int id) throws NonExistentEntryException {
         if (hashTable.isEmpty()) {
             logger.log("Database is empty, can't remove Service Order");
@@ -193,6 +199,7 @@ public class Service {
         throw new NonExistentEntryException("Service Order ID " + id + " not found in database");
     }
 
+    // client calling this method
     private void alterServiceOrder(int id, OS newServiceOrder) throws NonExistentEntryException {
         logger.log("Altering Service Order with ID " + id);
 

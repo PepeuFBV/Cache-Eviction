@@ -30,7 +30,6 @@ public class Client {
                 option = getOption();
                 System.out.println("Option: " + option);
                 String message = pickOption(option);
-                System.out.println("Sending message: " + message);
                 sendMessage(message);
             }
             System.out.println("Are you sure you want to exit? (y/n)");
