@@ -11,10 +11,10 @@ public class Client {
     private Service service;
     private Compressor compressor;
 
-    public Client(Service service) throws RuntimeException {
+    public Client(Service service, Compressor compressor) throws RuntimeException {
         try {
             logger = new Logger(Logger.LogOrigin.CLIENT);
-            compressor = new Compressor();
+            this.compressor = compressor;
             this.service = service;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
@@ -28,7 +28,9 @@ public class Client {
             int option = 0;
             while (option != 8) {
                 option = getOption();
+                System.out.println("Option: " + option);
                 String message = pickOption(option);
+                System.out.println("Sending message: " + message);
                 sendMessage(message);
             }
             System.out.println("Are you sure you want to exit? (y/n)");
@@ -40,10 +42,11 @@ public class Client {
         }
     }
 
-    private void sendMessage(String message) {
+    // change to private
+    public void sendMessage(String message) {
         String compressedMessage = compressor.compress(message);
-        service.receiveMessage(compressedMessage);
         System.out.println("Client sent compressed message: " + compressedMessage);
+        service.receiveMessage(compressedMessage);
     }
 
     private int getOption() {

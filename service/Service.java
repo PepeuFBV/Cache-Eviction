@@ -21,12 +21,12 @@ public class Service {
     private final Compressor compressor;
     private HashMap<String, String> dictionary;
 
-    public Service() {
+    public Service(Compressor compressor) {
         try {
             logger = new Logger(Logger.LogOrigin.SERVICE);
             cache = new Cache();
             hashTable = new HashTable();
-            compressor = new Compressor();
+            this.compressor = compressor;
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

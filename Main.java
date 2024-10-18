@@ -1,12 +1,15 @@
 import client.Client;
+import compression.Compressor;
 import service.Service;
 
 public class Main {
 
     public static void main(String[] args) {
-        Service service = new Service();
-        Client client = new Client(service);
-        client.startServices();
+        Compressor compressor = new Compressor();
+        Service service = new Service(compressor);
+        Client client = new Client(service, compressor);
+        // client.startServices();
+        client.sendMessage("Testing message sending right now");
     }
 
 }
