@@ -81,7 +81,7 @@ public class Cache {
         for (CacheEntry cacheEntry : cache) {
             if (cacheEntry.getOs().getId() == id) {
                 logger.log("Found element in cache");
-                return cache.get(id).getOs();
+                return cacheEntry.getOs();
             }
         }
         logger.log("Element not found in cache");
