@@ -33,7 +33,7 @@ public class Service {
         }
     }
 
-    public void receiveMessage(String compressedMessage) throws RuntimeException {
+    public String receiveMessage(String compressedMessage) throws RuntimeException {
         String message = compressor.decompress(compressedMessage);
         String[] parts = message.split(" "); // message format:
         String command = parts[0];
@@ -45,48 +45,48 @@ public class Service {
                     String[] creating = parts[1].split(",");
                     OS newServiceOrder = new OS(creating[0], creating[1], LocalDateTime.now()); // Adjust as necessary
                     addNewServiceOrder(newServiceOrder);
-                    break;
+                    return "Service Order with ID " + newServiceOrder.getId() + " created";
                 case "SEARCH":
                     int searchId = Integer.parseInt(parts[1]);
                     OS foundOrder = searchServiceOrder(searchId);
                     if (foundOrder != null) {
                         logger.log("Service Order found: " + foundOrder.toString());
+                        return "Found Service Order: " + foundOrder.toString();
                     } else {
                         logger.log("Service Order not found");
+                        return "Service Order not found";
                     }
-                    break;
                 case "ALTER":
                     String[] altering = parts[1].split(",");
                     OS alteredOrder = new OS(altering[1], altering[2], LocalDateTime.now()); // Adjust as necessary
                     alterServiceOrder(Integer.parseInt(altering[1]), alteredOrder);
-                    break;
+                    return "Service Order with ID " + altering[0] + " altered";
                 case "LIST":
                     if (parts[1].equals("CACHE")) {
-                        seeCache();
+                        return seeCache();
                     } else if (parts[1].equals("DATABASE")) {
-                        seeAllServiceOrders();
+                        return seeAllServiceOrders();
                     } else {
                         throw new RuntimeException("Invalid command");
                     }
-                    break;
                 case "REMOVE":
                     int removeId = Integer.parseInt(parts[1]);
-                    removeServiceOrder(removeId);
-                    break;
+                    return removeServiceOrder(removeId);
                 case "CLEAR":
                     if (parts[1].equals("LOG")) {
-                        clearLog();
+                        return clearLog();
                     } else {
                         throw new RuntimeException("Invalid command");
                     }
-                    break;
                 default:
                     throw new IllegalStateException("Unexpected message: " + command);
             }
         } catch (DuplicateEntryException | NonExistentEntryException e) {
             logger.log("Error processing message: " + message + " - " + e.getMessage());
+            return "Error processing message: " + message + " - " + e.getMessage(); // todo: remove?
         } catch (RuntimeException e) {
             logger.log("Error processing message: " + message);
+            return "Error processing message: " + message; // todo: remove?
         }
     }
 
@@ -120,36 +120,37 @@ public class Service {
     }
 
     // client calling this method
-    private void clearLog() throws RuntimeException {
+    private String clearLog() throws RuntimeException {
         try {
             logger.clearLog();
+            return "Log cleared";
         } catch (IOException e) {
             throw new RuntimeException("Failed to clear log");
         }
     }
 
     // client calling this method
-    private boolean seeAllServiceOrders() throws RuntimeException {
+    private String seeAllServiceOrders() throws RuntimeException {
         logger.log("Listing all Service Orders");
         if (cache.isEmpty() || hashTable.isEmpty()) { // checks for faster answer if cache is empty
             if (hashTable.isEmpty()) {
                 hashTable.log("Database is empty");
+                return "Database is empty";
             }
-            return false;
         }
         logContent(Logger.LogOrigin.DATABASE);
-        return true;
+        return getContent(Logger.LogOrigin.DATABASE);
     }
 
     // client calling this method
-    private boolean seeCache() {
+    private String seeCache() {
         logger.log("Listing all Service Orders in the cache");
         if (cache.isEmpty()) {
             cache.log("Cache is empty");
-            return false;
+            return "Cache is empty";
         }
         logContent(Logger.LogOrigin.CACHE);
-        return true;
+        return getContent(Logger.LogOrigin.CACHE);
     }
 
     // client calling this method
@@ -174,7 +175,7 @@ public class Service {
     }
 
     // client calling this method
-    private void removeServiceOrder(int id) throws NonExistentEntryException {
+    private String removeServiceOrder(int id) throws NonExistentEntryException {
         if (hashTable.isEmpty()) {
             logger.log("Database is empty, can't remove Service Order");
             throw new NonExistentEntryException("Database is empty, can't remove Service Order");
@@ -184,19 +185,19 @@ public class Service {
                 cache.remove(id);
                 hashTable.remove(id);
                 logger.log("Service Order ID " + id + " removed from cache and database");
-                return; // success on removal
+                return "Service Order ID " + id + " removed from cache and database";
             } catch (NonExistentEntryException e) {
                 cache.log("Service Order ID " + id + " not found in cache");
                 try {
                     hashTable.remove(id);
                     logger.log("Service Order ID " + id + " removed from database");
-                    return; // success on removal
+                    return "Service Order ID " + id + " removed from database";
                 } catch (NonExistentEntryException e2) {
                     hashTable.log("Service Order ID " + id + " not found in database");
+                    throw new NonExistentEntryException("Service Order ID " + id + " not found in database");
                 }
             }
         }
-        throw new NonExistentEntryException("Service Order ID " + id + " not found in database");
     }
 
     // client calling this method
@@ -218,6 +219,15 @@ public class Service {
         } else if (origin == Logger.LogOrigin.CACHE) {
             cache.logContent();
         }
+    }
+
+    private String getContent(Logger.LogOrigin origin) {
+        if (origin == Logger.LogOrigin.DATABASE) {
+            return hashTable.toString();
+        } else if (origin == Logger.LogOrigin.CACHE) {
+            return cache.toString();
+        }
+        return null; // todo: throw exception
     }
 
     private boolean isInCache(OS os) {

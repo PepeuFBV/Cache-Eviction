@@ -41,9 +41,8 @@ public class Client {
         }
     }
 
-    // change to private
-    public void sendMessage(String message) {
-        service.receiveMessage(compressor.compress(message));
+    private void sendMessage(String message) {
+        System.out.println(service.receiveMessage(compressor.compress(message)));
     }
 
     private int getOption() {
