@@ -130,7 +130,7 @@ public class Cache {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (CacheEntry cacheEntry : cache) {
-            sb.append(cacheEntry.getOs().getName()).append(" - ").append(cacheEntry.getOs().getDescription()).append(" - ").append(cacheEntry.getOs().getSolicitationTime()).append("\n");
+            sb.append("[ ").append(cacheEntry.getOs().getName()).append(" - ").append(cacheEntry.getOs().getDescription()).append(" - ").append(cacheEntry.getOs().getSolicitationTime()).append(" ]").append("\n");
         }
         return sb.toString();
     }

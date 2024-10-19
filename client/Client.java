@@ -28,7 +28,6 @@ public class Client {
             int option = 0;
             while (option != 8) {
                 option = getOption();
-                System.out.println("Option: " + option);
                 String message = pickOption(option);
                 sendMessage(message);
             }
@@ -42,7 +41,7 @@ public class Client {
     }
 
     private void sendMessage(String message) {
-        System.out.println(service.receiveMessage(compressor.compress(message)));
+        System.out.println("\n" + service.receiveMessage(compressor.compress(message)) + "\n");
     }
 
     private int getOption() {
@@ -66,11 +65,11 @@ public class Client {
         return switch (option) {
             case 1 -> {
                 logger.log("Creating a new Service Order");
-                System.out.println("Enter the data for the new Service Order");
+                System.out.println("\nEnter the data for the new Service Order");
                 Scanner scanner = new Scanner(System.in);
-                System.out.println("Name: ");
+                System.out.print("Name: ");
                 String name = scanner.nextLine();
-                System.out.println("Description: ");
+                System.out.print("Description: ");
                 String description = scanner.nextLine();
                 yield "CREATE " + name + "," + description;
             }
@@ -94,9 +93,9 @@ public class Client {
                 int id = scanner.nextInt();
                 scanner.nextLine(); // consume the newline
                 System.out.println("Enter the new data for the Service Order");
-                System.out.println("Name: ");
+                System.out.print("Name: ");
                 String name = scanner.nextLine();
-                System.out.println("Description: ");
+                System.out.print("Description: ");
                 String description = scanner.nextLine();
                 yield "ALTER " + id + "," + name + "," + description;
             }
