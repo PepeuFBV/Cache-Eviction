@@ -24,7 +24,7 @@ public class Client {
 
     public void startServices(boolean executeScript) {
         if (executeScript) {
-            createXOS(100);
+            script();
         }
         boolean exit = false;
         while (!exit) {
@@ -130,9 +130,20 @@ public class Client {
                 [8] - Exit""");
     }
 
+    private void script() {
+        createXOS(100);
+        searchXOS(100);
+    }
+
     private void createXOS(int ammount) {
         for (int i = 0; i < ammount; i++) {
             sendMessage("CREATE " + i + ",description" + i);
+        }
+    }
+
+    private void searchXOS(int ammount) {
+        for (int i = 0; i < ammount; i++) {
+            sendMessage("SEARCH " + i);
         }
     }
 
