@@ -152,7 +152,7 @@ public class HashTable {
 
     public void logContent() throws RuntimeException {
         try {
-            logger.log(toString());
+            logger.log("\n" + toString());
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
