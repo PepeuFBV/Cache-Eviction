@@ -9,6 +9,7 @@ import service.database.HashTable;
 import service.log.Logger;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 // todo: make flag for logging whole database or cache content at every operation
@@ -43,7 +44,7 @@ public class Service {
             switch (command) {
                 case "CREATE":
                     String[] creating = parts[1].split(",");
-                    OS newServiceOrder = new OS(creating[0], creating[1], LocalDateTime.now()); // Adjust as necessary
+                    OS newServiceOrder = new OS(creating[0], creating[1], LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
                     addNewServiceOrder(newServiceOrder);
                     return "Service Order with ID " + newServiceOrder.getId() + " created";
                 case "SEARCH":
@@ -58,7 +59,7 @@ public class Service {
                     }
                 case "ALTER":
                     String[] altering = parts[1].split(",");
-                    OS alteredOrder = new OS(altering[1], altering[2], LocalDateTime.now()); // Adjust as necessary
+                    OS alteredOrder = new OS(altering[1], altering[2], LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))); // Adjust as necessary
                     alterServiceOrder(Integer.parseInt(altering[1]), alteredOrder);
                     return "Service Order with ID " + altering[0] + " altered";
                 case "LIST":
