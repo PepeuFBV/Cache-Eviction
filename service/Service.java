@@ -157,7 +157,7 @@ public class Service {
     }
 
     // client calling this method
-    private OS searchServiceOrder(int id) {
+    private OS searchServiceOrder(int id) { // todo: fix (exception when searching for id 99)
         logger.log("Searching for Service Order with ID " + id);
         if (hashTable.isEmpty()) {
             hashTable.log("Database is empty, can't search for Service Order");
