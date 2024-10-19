@@ -81,12 +81,15 @@ public class Service {
                 default:
                     throw new IllegalStateException("Unexpected message: " + command);
             }
-        } catch (DuplicateEntryException | NonExistentEntryException e) {
-            logger.log("Error processing message: " + message + " - " + e.getMessage());
-            return "Error processing message: " + message + " - " + e.getMessage(); // todo: remove?
+        } catch (DuplicateEntryException e) {
+            logger.log("Duplicate Entry exception for:" + message);
+            return "Duplicate Service Order for: " + message;
         } catch (RuntimeException e) {
-            logger.log("Error processing message: " + message);
-            return "Error processing message: " + message; // todo: remove?
+            logger.log("Runtime Exception for: " + message);
+            return "Runtime Exception for: " + message;
+        } catch (NonExistentEntryException e) {
+            logger.log("NonExistentEntry exception for: " + message + " - " + e.getMessage());
+            return "NonExistent Service Order for: " + message + " - " + e.getMessage();
         }
     }
 
