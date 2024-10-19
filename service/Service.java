@@ -115,8 +115,8 @@ public class Service {
         } else { // service order doesn't exist in cache or database
             hashTable.add(os);
             logger.log("Service Order added to database");
-            cache.add(os);
-            logger.log("Service Order added to cache");
+            // cache.add(os);
+            // logger.log("Service Order added to cache");
         }
     }
 
