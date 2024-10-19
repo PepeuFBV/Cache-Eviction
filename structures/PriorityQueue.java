@@ -115,6 +115,23 @@ public class PriorityQueue<T extends PriorityQueueEntry> implements Iterable<T> 
         size--;
     }
 
+    public void reorder() {
+        if (first == null || first.next == null) {
+            return; // No need to reorder if the queue is empty or has only one element
+        }
+
+        Node current = first;
+        first = null;
+        last = null;
+        size = 0;
+
+        while (current != null) {
+            Node next = current.next;
+            insert(current.entry);
+            current = next;
+        }
+    }
+
     public void clear() {
         first = null;
         last = null;

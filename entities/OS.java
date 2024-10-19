@@ -1,16 +1,14 @@
 package entities;
 
-import java.time.LocalDateTime;
-
 public class OS {
 
     private static int idCounter = 0;
     private final int id;
     private String name;
     private String description;
-    private LocalDateTime solicitationTime;
+    private String solicitationTime;
 
-    public OS(String name, String description, LocalDateTime solicitationTime) {
+    public OS(String name, String description, String solicitationTime) {
         this.id = idCounter++;
         this.setName(name);
         this.setDescription(description);
@@ -33,11 +31,11 @@ public class OS {
         return description;
     }
 
-    private void setSolicitationTime(LocalDateTime solicitationTime) {
+    private void setSolicitationTime(String solicitationTime) {
         this.solicitationTime = solicitationTime;
     }
 
-    public LocalDateTime getSolicitationTime() {
+    public String getSolicitationTime() {
         return solicitationTime;
     }
 

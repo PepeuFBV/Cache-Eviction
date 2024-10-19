@@ -158,13 +158,14 @@ public class Service {
     }
 
     // client calling this method
-    private OS searchServiceOrder(int id) { // todo: fix (exception when searching for id 99)
+    private OS searchServiceOrder(int id) {
         logger.log("Searching for Service Order with ID " + id);
         if (hashTable.isEmpty()) {
             hashTable.log("Database is empty, can't search for Service Order");
         } else {
             OS os = cache.search(id);
             if (os != null) { // OS exists in the cache
+                cache.increasePriority(id); // increases priority
                 return os;
             } else { // OS is not in the cache
                 os = hashTable.search(id);
@@ -213,8 +214,11 @@ public class Service {
         serviceOrder.setDescription(newServiceOrder.getDescription());
         logger.log("Service Order ID " + id + " altered");
 
-        cache.add(serviceOrder);
-        logger.log("Service Order ID " + id + " added to cache");
+        if (isInCache(serviceOrder)) {
+            cache.increasePriority(id);
+        } else {
+            cache.add(serviceOrder);
+        }
     }
 
     private void logContent(Logger.LogOrigin origin) {

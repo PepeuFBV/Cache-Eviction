@@ -5,7 +5,7 @@ import structures.PriorityQueueEntry;
 
 import java.util.Iterator;
 
-public class CacheEntry extends PriorityQueueEntry {
+public class CacheEntry extends PriorityQueueEntry implements Comparable<CacheEntry> {
 
     private final OS os;
     private int priority = 1;
@@ -70,6 +70,11 @@ public class CacheEntry extends PriorityQueueEntry {
                 return entry;
             }
         };
+    }
+
+    @Override
+    public int compareTo(CacheEntry other) {
+        return Integer.compare(priority, other.priority);
     }
 
     @Override

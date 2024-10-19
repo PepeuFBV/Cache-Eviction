@@ -28,7 +28,7 @@ public class Cache {
         OS found = search(os.getId());
         if (found != null) { // if the element is already in the cache, don't add it again, just update its priority
             logger.log("Element already in cache");
-            increasePriority(os.getId());
+            //increasePriority(os.getId());
         } else {
             logger.log("Adding a new element to cache with ID " + os.getId());
             int capacity = 30;
@@ -42,11 +42,12 @@ public class Cache {
         }
     }
 
-    private void increasePriority(int id) {
+    public void increasePriority(int id) {
         for (CacheEntry cacheEntry : cache) {
             if (cacheEntry.getOs().getId() == id) {
                 cacheEntry.increasePriority();
                 logger.log("Increased priority of element in cache with ID " + id);
+                cache.reorder(); // reorder the cache after increasing the priority
                 return;
             }
         }
@@ -130,7 +131,12 @@ public class Cache {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (CacheEntry cacheEntry : cache) {
-            sb.append("[ ").append(cacheEntry.getOs().getName()).append(" - ").append(cacheEntry.getOs().getDescription()).append(" - ").append(cacheEntry.getOs().getSolicitationTime()).append(" ]").append("\n");
+            sb.append("[ ")
+                    .append(cacheEntry.getOs().getName()).append(" - ")
+                    .append(cacheEntry.getOs().getDescription()).append(" - ")
+                    .append(cacheEntry.getOs().getSolicitationTime()).append(" - ")
+                    .append("Priority: ").append(cacheEntry.getPriority())
+                    .append(" ]").append("\n");
         }
         return sb.toString();
     }
