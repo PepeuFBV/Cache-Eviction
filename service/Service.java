@@ -59,7 +59,7 @@ public class Service {
                     }
                 case "ALTER":
                     String[] altering = parts[1].split(",");
-                    OS alteredOrder = new OS(altering[1], altering[2], LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))); // Adjust as necessary
+                    OS alteredOrder = new OS(altering[1], altering[2], LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
                     alterServiceOrder(Integer.parseInt(altering[1]), alteredOrder);
                     return "Service Order with ID " + altering[0] + " altered";
                 case "LIST":
