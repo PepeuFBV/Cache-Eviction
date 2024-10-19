@@ -8,7 +8,7 @@ public class Main {
         Compressor compressor = new Compressor();
         Service service = new Service(compressor);
         Client client = new Client(service, compressor);
-        client.startServices();
+        client.startServices(true);
     }
 
 }

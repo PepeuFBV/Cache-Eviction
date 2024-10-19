@@ -22,7 +22,10 @@ public class Client {
         }
     }
 
-    public void startServices() {
+    public void startServices(boolean executeScript) {
+        if (executeScript) {
+            createXOS(100);
+        }
         boolean exit = false;
         while (!exit) {
             int option = 1;
@@ -125,6 +128,12 @@ public class Client {
                 [6] - Remove a Service Order
                 [7] - Clear the log
                 [8] - Exit""");
+    }
+
+    private void createXOS(int ammount) {
+        for (int i = 0; i < ammount; i++) {
+            sendMessage("CREATE " + i + ",description" + i);
+        }
     }
 
 }
