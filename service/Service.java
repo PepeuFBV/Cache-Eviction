@@ -10,10 +10,8 @@ import service.log.Logger;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 
 // todo: make flag for logging whole database or cache content at every operation
-// todo: test all methods
 
 public class Service {
 
@@ -21,7 +19,6 @@ public class Service {
     private final Logger logger;
     private final HashTable hashTable;
     private final Compressor compressor;
-    private HashMap<String, String> dictionary;
 
     public Service(Compressor compressor) {
         try {
