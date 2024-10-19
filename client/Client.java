@@ -25,11 +25,15 @@ public class Client {
     public void startServices() {
         boolean exit = false;
         while (!exit) {
-            int option = 0;
-            while (option != 8) {
+            int option = 1;
+            while (true) {
                 option = getOption();
-                String message = pickOption(option);
-                sendMessage(message);
+                try {
+                    String message = pickOption(option);
+                    sendMessage(message);
+                } catch (Exception e) {
+                    break;
+                }
             }
             System.out.println("Are you sure you want to exit? (y/n)");
             Scanner scanner = new Scanner(System.in);
@@ -48,16 +52,8 @@ public class Client {
         showOptions();
         System.out.print("--> ");
         Scanner scanner = new Scanner(System.in);
-        int option = 0;
-        try {
-            option = scanner.nextInt();
-            if (option < 1 || option > 8) {
-                System.out.println("Invalid option. Try again\n");
-            }
-            return option;
-        } catch (Exception e) {
-            System.out.println("Invalid option. Try again\n");
-        }
+        int option = 1;
+        option = scanner.nextInt();
         return option;
     }
 
