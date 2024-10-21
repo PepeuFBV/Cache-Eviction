@@ -57,7 +57,7 @@ public class Service {
                 case "ALTER":
                     String[] altering = parts[1].split(",");
                     OS alteredOrder = new OS(altering[1], altering[2], LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-                    alterServiceOrder(Integer.parseInt(altering[1]), alteredOrder);
+                    alterServiceOrder(Integer.parseInt(altering[0]), alteredOrder);
                     return "Service Order with ID " + altering[0] + " altered";
                 case "LIST":
                     if (parts[1].equals("CACHE")) {
