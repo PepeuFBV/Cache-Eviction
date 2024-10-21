@@ -19,4 +19,5 @@ public class Compressor {
     public String decompress(String compressedText) {
         return huffmanTree.decompress(compressedText);
     }
+
 }
