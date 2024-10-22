@@ -76,6 +76,10 @@ public class Service {
                     } else {
                         throw new RuntimeException("Invalid command");
                     }
+                case "FIND": // finding operations in the log by ID
+                    int findId = Integer.parseInt(parts[1]);
+                    Logger tempLogger = new Logger(Logger.LogOrigin.LOGGER);
+                    return tempLogger.findOperations(findId);
                 default:
                     throw new IllegalStateException("Unexpected message: " + command);
             }

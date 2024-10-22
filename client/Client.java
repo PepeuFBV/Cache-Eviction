@@ -114,6 +114,14 @@ public class Client {
                 logger.log("Clearing the log");
                 yield "CLEAR LOG";
             }
+            case 8 -> {
+                logger.log("Finding operations by ID");
+                System.out.println("Enter the ID of the operation");
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("ID: ");
+                int id = scanner.nextInt();
+                yield "FIND " + id;
+            }
             default -> throw new IllegalStateException("Unexpected value: " + option);
         };
     }
@@ -127,7 +135,8 @@ public class Client {
                 [5] - See the cache
                 [6] - Remove a Service Order
                 [7] - Clear the log
-                [8] - Exit""");
+                [8] - Find operations by ID
+                [9] - Exit""");
     }
 
     private void script() {

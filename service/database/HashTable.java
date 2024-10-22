@@ -104,7 +104,7 @@ public class HashTable {
                 }
             }
         }
-        logger.log("Adding Service Order to index " + index);
+        logger.log("Adding Service Order with ID " + serviceOrder.getId() + " at index " + index);
         table[index].add(serviceOrder);
         size++;
     }
